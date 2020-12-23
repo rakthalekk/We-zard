@@ -1,13 +1,15 @@
 class_name Player
 extends KinematicBody2D
 
-export var speed = Vector2(300.0, 800.0)
+export var speed = Vector2(300.0, 900.0)
 onready var gravity = ProjectSettings.get("physics/2d/default_gravity")
 
 const FLOOR_NORMAL = Vector2.UP
 const FLOOR_DETECT_DISTANCE = 20.0
-const DASH_SPEED = Vector2(1500, 1500)
-const DASH_TIME = 0.15
+const DASH_SPEED = Vector2(1200, 1200)
+const DASH_TIME = 0.20
+
+signal ice_spell
 
 var _velocity = Vector2.ZERO
 var direction = Vector2.ZERO
@@ -45,6 +47,9 @@ func _physics_process(delta):
 		sprite.scale.x = 1 if direction.x > 0 else -1
 	#var animation = get_new_animation()
 	#animation_player.play(animation)
+	
+	if Input.is_action_just_pressed("ice_spell"):
+		emit_signal("ice_spell")
 
 
 func get_direction():
@@ -58,7 +63,7 @@ func get_dash_direction():
 	var dir = Vector2(
 		Input.get_action_strength("move_right") - Input.get_action_strength("move_left"),
 		Input.get_action_strength("move_down") - Input.get_action_strength("move_up")
-	)
+	).normalized()
 	return dir if dir.length() != 0 else Vector2(sprite.scale.x, 0)
 
 
