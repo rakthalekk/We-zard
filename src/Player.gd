@@ -32,7 +32,7 @@ func _physics_process(delta):
 		var is_jump_interrupted = Input.is_action_just_released("jump") and _velocity.y < 0.0
 		calculate_move_velocity(acceleration, direction, speed, is_jump_interrupted)
 	
-	if Input.is_action_just_pressed("dash") && dash_timer == 0 && !air_dash:
+	if Input.is_action_just_pressed("dash") && dash_timer == 0 && !air_dash: #speeding up (dashing)
 		dash_timer = DASH_TIME
 		_velocity.y = 0
 		dashing = true
@@ -42,7 +42,7 @@ func _physics_process(delta):
 	if is_on_floor():
 		air_dash = false
 		
-	if get_slide_count() > 0:
+	if get_slide_count() > 0: #slowing down
 		for i in get_slide_count():
 			if get_slide_collision(i).collider.is_in_group("icy"):
 				friction = 0
@@ -60,18 +60,18 @@ func _physics_process(delta):
 	#var animation = get_new_animation()
 	#animation_player.play(animation)
 	
-	if Input.is_action_just_pressed("ice_spell"):
+	if Input.is_action_just_pressed("ice_spell"):#action button casts freeze spell 
 		emit_signal("ice_spell")
 
 
-func get_direction():
+func get_direction(): #get direction of the character 
 	return Vector2(
 		Input.get_action_strength("move_right") - Input.get_action_strength("move_left"),
 		-1 if (is_on_floor()) and Input.is_action_just_pressed("jump") else 0
 	)
 	
 	
-func calculate_move_velocity(acc, direction, speedl, is_jump_interrupted):
+func calculate_move_velocity(acc, direction, speedl, is_jump_interrupted): #determine how fast the character is moving
 	if direction.x != 0:
 		_velocity.x = lerp(_velocity.x, direction.x * speedl.x, acc)
 	else:
@@ -106,7 +106,7 @@ func handle_dash(delta):
 		air_dash = true
 
 
-func get_new_animation():
+func get_new_animation(): 
 	var animation_new = ""
 	if is_on_floor():
 		animation_new = "running" if abs(_velocity.x) > 0.1 else "idle"

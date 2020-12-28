@@ -12,7 +12,7 @@ onready var foreground = $Foreground
 onready var snowy_foreground = $Snowy_Foreground
 onready var player = $Player
 
-func _ready():
+func _ready(): #set camera position
 	for child in get_children():
 		if child is Player:
 			var camera = child.get_node("Camera")

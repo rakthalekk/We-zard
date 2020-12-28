@@ -1,6 +1,6 @@
 extends Area2D
 
-signal freeze(pos)
+signal freeze(pos) #sends 'freeze' signal with position coords to main.
 onready var raycasts = $Raycasts.get_children()
 
 func _ready():
@@ -10,7 +10,7 @@ func _ready():
 func _physics_process(_delta):
 	for ray in raycasts:
 		if ray.is_colliding() && ray.get_collider().get_name() == "Foreground":
-			emit_signal("freeze", ray.get_collision_point())
+			emit_signal("freeze", ray.get_collision_point())#if freeze hits foreground tile, freeze that tile. 
 
 
 func _on_Timer_timeout():
