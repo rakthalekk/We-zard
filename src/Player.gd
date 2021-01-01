@@ -36,19 +36,10 @@ func _physics_process(delta):
 		direction = get_direction()
 		var is_jump_interrupted = Input.is_action_just_released("jump") and _velocity.y < 0.0
 		calculate_move_velocity(acceleration, direction, speed, is_jump_interrupted)
-<<<<<<< Updated upstream
-	
-	if Input.is_action_just_pressed("dash") && dash_timer == 0 && !air_dash: #speeding up (dashing)
-=======
-<<<<<<< HEAD
 	if casting:
 		_velocity = Vector2(0, 0)
-	if Input.is_action_just_pressed("dash") && dash_timer == 0 && !air_dash:
-=======
 	
 	if Input.is_action_just_pressed("dash") && dash_timer == 0 && !air_dash: #speeding up (dashing)
->>>>>>> 6c3e91fb4d6e811884b18948fd34bb1d9b165e7e
->>>>>>> Stashed changes
 		dash_timer = DASH_TIME
 		_velocity.y = 0
 		dashing = true
@@ -76,17 +67,9 @@ func _physics_process(delta):
 	var animation = get_new_animation()
 	animation_player.play(animation)
 	
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
-	if Input.is_action_just_pressed("ice_spell"):
+	if Input.is_action_just_pressed("ice_spell"):#action button casts freeze spell 
 		casting = true
 		$SpellCast.start()
-=======
->>>>>>> Stashed changes
-	if Input.is_action_just_pressed("ice_spell"):#action button casts freeze spell 
-		emit_signal("ice_spell")
->>>>>>> 6c3e91fb4d6e811884b18948fd34bb1d9b165e7e
 
 
 func get_direction(): #get direction of the character 
