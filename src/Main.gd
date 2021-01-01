@@ -22,9 +22,10 @@ func _ready(): #set camera position
 			camera.limit_bottom = LIMIT_BOTTOM
 
 
-func _on_Player_ice_spell():
+func _on_Player_ice_spell(dir):
 	var spell = IceSpell.instance()
 	spell.position = player.position
+	spell.dir = dir
 	add_child(spell)
 	spell.connect("freeze", self, "_on_freeze")
 	

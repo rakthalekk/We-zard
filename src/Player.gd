@@ -11,13 +11,15 @@ const FLOOR_DETECT_DISTANCE = 20.0
 const DASH_SPEED = Vector2(1200, 1200)
 const DASH_TIME = 0.20
 
-signal ice_spell
+signal ice_spell(dir)
 
 var _velocity = Vector2.ZERO
 var friction = ground_friction
 var dash_timer = 0
 var air_dash = false
 var dashing = false
+var casting = false
+var cast_dir = Vector2(0, 0)
 var stored_dir = Vector2(0, 0)
 
 onready var gravity = ProjectSettings.get("physics/2d/default_gravity")
@@ -25,14 +27,28 @@ onready var animation_player = $AnimationPlayer
 onready var sprite = $Sprite
 
 func _physics_process(delta):
+	if get_input_dir().length() != 0 && casting:
+		cast_dir = get_input_dir()
+	$CastLine.points[1] = 200 * cast_dir
 	var direction = Vector2.ZERO
 	if !dashing:
 		_velocity.y += gravity * delta
 		direction = get_direction()
 		var is_jump_interrupted = Input.is_action_just_released("jump") and _velocity.y < 0.0
 		calculate_move_velocity(acceleration, direction, speed, is_jump_interrupted)
+<<<<<<< Updated upstream
 	
 	if Input.is_action_just_pressed("dash") && dash_timer == 0 && !air_dash: #speeding up (dashing)
+=======
+<<<<<<< HEAD
+	if casting:
+		_velocity = Vector2(0, 0)
+	if Input.is_action_just_pressed("dash") && dash_timer == 0 && !air_dash:
+=======
+	
+	if Input.is_action_just_pressed("dash") && dash_timer == 0 && !air_dash: #speeding up (dashing)
+>>>>>>> 6c3e91fb4d6e811884b18948fd34bb1d9b165e7e
+>>>>>>> Stashed changes
 		dash_timer = DASH_TIME
 		_velocity.y = 0
 		dashing = true
@@ -57,11 +73,20 @@ func _physics_process(delta):
 	
 	if direction.x != 0:
 		sprite.scale.x = 1 if direction.x > 0 else -1
-	#var animation = get_new_animation()
-	#animation_player.play(animation)
+	var animation = get_new_animation()
+	animation_player.play(animation)
 	
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+	if Input.is_action_just_pressed("ice_spell"):
+		casting = true
+		$SpellCast.start()
+=======
+>>>>>>> Stashed changes
 	if Input.is_action_just_pressed("ice_spell"):#action button casts freeze spell 
 		emit_signal("ice_spell")
+>>>>>>> 6c3e91fb4d6e811884b18948fd34bb1d9b165e7e
 
 
 func get_direction(): #get direction of the character 
@@ -82,11 +107,15 @@ func calculate_move_velocity(acc, direction, speedl, is_jump_interrupted): #dete
 		_velocity.y *= 0.5
 
 
-func get_dash_direction():
-	var dir = Vector2(
+func get_input_dir():
+	return Vector2(
 		Input.get_action_strength("move_right") - Input.get_action_strength("move_left"),
 		Input.get_action_strength("move_down") - Input.get_action_strength("move_up")
 	).normalized()
+
+
+func get_dash_direction():
+	var dir = get_input_dir()
 	return dir if dir.length() != 0 else Vector2(sprite.scale.x, 0)
 
 
@@ -108,8 +137,19 @@ func handle_dash(delta):
 
 func get_new_animation(): 
 	var animation_new = ""
-	if is_on_floor():
-		animation_new = "running" if abs(_velocity.x) > 0.1 else "idle"
+#	if is_on_floor():
+#		animation_new = "running" if abs(_velocity.x) > 0.1 else "idle"
+#	else:
+#		animation_new = "jumping"
+	if casting:
+		animation_new = "spell_cast"
 	else:
-		animation_new = "jumping"
+		animation_new = "idle"
 	return animation_new
+
+
+func _on_SpellCast_timeout():
+	casting = false
+	$SpellCast.stop()
+	emit_signal("ice_spell", cast_dir)
+	cast_dir = Vector2(0, 0)
