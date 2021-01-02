@@ -62,4 +62,30 @@ wait_time = 0.5
 [node name="CastLine" type="Line2D" parent="."]
 points = PoolVector2Array( 0, 0, 0, 0 )
 width = 2.0
+
+[node name="WallColliders" type="Node2D" parent="."]
+
+[node name="LeftColliders" type="Node2D" parent="WallColliders"]
+
+[node name="LeftRay1" type="RayCast2D" parent="WallColliders/LeftColliders"]
+position = Vector2( -19, -15 )
+enabled = true
+cast_to = Vector2( -5, 0 )
+
+[node name="LeftRay2" type="RayCast2D" parent="WallColliders/LeftColliders"]
+position = Vector2( -19, 15 )
+enabled = true
+cast_to = Vector2( -5, 0 )
+
+[node name="RightColliders" type="Node2D" parent="WallColliders"]
+
+[node name="RightRay1" type="RayCast2D" parent="WallColliders/RightColliders"]
+position = Vector2( 19, -15 )
+enabled = true
+cast_to = Vector2( 1, 0 )
+
+[node name="RightRay2" type="RayCast2D" parent="WallColliders/RightColliders"]
+position = Vector2( 19, 15 )
+enabled = true
+cast_to = Vector2( 1, 0 )
 [connection signal="timeout" from="SpellCast" to="." method="_on_SpellCast_timeout"]

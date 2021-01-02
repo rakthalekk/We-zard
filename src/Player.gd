@@ -2,9 +2,10 @@ class_name Player
 extends KinematicBody2D
 
 export var speed = Vector2(300.0, 900.0)
+export var wall_jump_speed = Vector2(400, -800)
 export (float, 0, 1.0) var ground_friction = 0.5
 export (float, 0, 1.0) var air_friction = 0.05
-export (float, 0, 1.0) var acceleration = 0.25
+export (float, 0, 1.0) var acceleration = 0.2
 
 const FLOOR_NORMAL = Vector2.UP
 const FLOOR_DETECT_DISTANCE = 20.0
@@ -19,12 +20,15 @@ var dash_timer = 0
 var air_dash = false
 var dashing = false
 var casting = false
+var on_ice_wall = false
 var cast_dir = Vector2(0, 0)
 var stored_dir = Vector2(0, 0)
 
 onready var gravity = ProjectSettings.get("physics/2d/default_gravity")
 onready var animation_player = $AnimationPlayer
 onready var sprite = $Sprite
+onready var left_rays = $"WallColliders/LeftColliders"
+onready var right_rays = $"WallColliders/RightColliders"
 
 func _physics_process(delta):
 	if get_input_dir().length() != 0 && casting:
@@ -32,7 +36,10 @@ func _physics_process(delta):
 	$CastLine.points[1] = 200 * cast_dir
 	var direction = Vector2.ZERO
 	if !dashing:
-		_velocity.y += gravity * delta
+		if !on_ice_wall:
+			_velocity.y += gravity * delta
+		else:
+			_velocity.y += 7.0 / 10.0 * gravity * delta
 		direction = get_direction()
 		var is_jump_interrupted = Input.is_action_just_released("jump") and _velocity.y < 0.0
 		calculate_move_velocity(acceleration, direction, speed, is_jump_interrupted)
@@ -49,14 +56,24 @@ func _physics_process(delta):
 	if is_on_floor():
 		air_dash = false
 		
+	on_ice_wall = false
 	if get_slide_count() > 0: #slowing down
 		for i in get_slide_count():
 			if get_slide_collision(i).collider.is_in_group("icy"):
 				friction = 0
+				if is_on_wall():
+					on_ice_wall = true
 			else:
 				friction = ground_friction
 	else:
 		friction = air_friction
+	
+	for raycast in left_rays.get_children():
+		if raycast.is_colliding():
+			print("bruh")
+	for raycast in right_rays.get_children():
+		if raycast.is_colliding():
+			print("shbruh")
 	var snap_vector = Vector2.DOWN * FLOOR_DETECT_DISTANCE if direction.y == 0.0 else Vector2.ZERO
 	_velocity = move_and_slide_with_snap(
 		_velocity, snap_vector, FLOOR_NORMAL, false, 4, 0.9, false
@@ -112,7 +129,7 @@ func handle_dash(delta):
 		dash_timer = 0
 		dashing = false
 		_velocity.x *= 0.2 if friction != 0 else 1
-		_velocity.y *= 0.2 if _velocity.y < 0 else 1
+		_velocity.y *= 0.2 if _velocity.y < 0 and !on_ice_wall else 1
 		stored_dir = Vector2(0, 0)
 	if !is_on_floor():
 		air_dash = true
