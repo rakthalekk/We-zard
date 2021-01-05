@@ -2,10 +2,10 @@ class_name Player
 extends KinematicBody2D
 
 export var speed = Vector2(300.0, 900.0)
-export var wall_jump_speed = Vector2(400, -800)
+export var wall_jump_speed = Vector2(2000, 800)
 export (float, 0, 1.0) var ground_friction = 0.5
 export (float, 0, 1.0) var air_friction = 0.05
-export (float, 0, 1.0) var acceleration = 0.2
+export (float, 0, 1.0) var acceleration = 0.1
 
 const FLOOR_NORMAL = Vector2.UP
 const FLOOR_DETECT_DISTANCE = 20.0
@@ -14,79 +14,87 @@ const DASH_TIME = 0.20
 
 signal ice_spell(dir)
 
+var move_direction = Vector2.ZERO
 var _velocity = Vector2.ZERO
 var friction = ground_friction
 var dash_timer = 0
 var air_dash = false
-var dashing = false
-var casting = false
-var on_ice_wall = false
+var haha_ice = false
 var cast_dir = Vector2(0, 0)
-var stored_dir = Vector2(0, 0)
+var useless_boolean_that_i_shouldnt_need = false
+var wall_direction = 1
 
 onready var gravity = ProjectSettings.get("physics/2d/default_gravity")
 onready var animation_player = $AnimationPlayer
 onready var sprite = $Sprite
+onready var cast_line = $CastLine
 onready var left_rays = $"WallColliders/LeftColliders"
 onready var right_rays = $"WallColliders/RightColliders"
 
-func _physics_process(delta):
-	if get_input_dir().length() != 0 && casting:
-		cast_dir = get_input_dir()
-	$CastLine.points[1] = 200 * cast_dir
-	var direction = Vector2.ZERO
-	if !dashing:
-		if !on_ice_wall:
-			_velocity.y += gravity * delta
-		else:
-			_velocity.y += 7.0 / 10.0 * gravity * delta
-		direction = get_direction()
-		var is_jump_interrupted = Input.is_action_just_released("jump") and _velocity.y < 0.0
-		calculate_move_velocity(acceleration, direction, speed, is_jump_interrupted)
-	if casting:
-		_velocity = Vector2(0, 0)
+
+func check_is_valid_wall(wall_raycasts):
+	for raycast in wall_raycasts.get_children():
+		if raycast.is_colliding():
+			if raycast.get_collider().get_name() == "Snowy_Foreground":
+				haha_ice = true
+			else:
+				haha_ice = false
+			return true
+	return false
+
+
+func update_wall_direction():
+	var is_near_wall_left = check_is_valid_wall(left_rays)
+	var is_near_wall_right = check_is_valid_wall(right_rays)
+	if is_near_wall_left and is_near_wall_right:
+		wall_direction = move_direction
+	else:
+		wall_direction = -int(is_near_wall_left) + int(is_near_wall_right)
+	if !is_near_wall_left and !is_near_wall_right:
+		haha_ice = false
+
+func wall_jump():
+	calculate_move_velocity(0.5, Vector2(-wall_direction, -1), wall_jump_speed, false)
 	
-	if Input.is_action_just_pressed("dash") && dash_timer == 0 && !air_dash: #speeding up (dashing)
-		dash_timer = DASH_TIME
-		_velocity.y = 0
-		dashing = true
-		direction = get_dash_direction()
-	if dash_timer > 0:
-		handle_dash(delta)
+func display_cast_line():
+	if get_input_dir().length() != 0 && useless_boolean_that_i_shouldnt_need:
+		cast_dir = get_input_dir()
+	cast_line.points[1] = 200 * cast_dir
+	
+	
+func apply_gravity(delta, factor = 1):
+	_velocity.y += factor * gravity * delta
+
+
+func regular_movement():
+	move_direction = get_direction()
+	var is_jump_interrupted = Input.is_action_just_released("jump") and _velocity.y < 0.0
+	calculate_move_velocity(acceleration, move_direction, speed, is_jump_interrupted)
+
+
+func handle_movement(delta):
 	if is_on_floor():
 		air_dash = false
 		
-	on_ice_wall = false
-	if get_slide_count() > 0: #slowing down
-		for i in get_slide_count():
-			if get_slide_collision(i).collider.is_in_group("icy"):
-				friction = 0
-				if is_on_wall():
-					on_ice_wall = true
-			else:
-				friction = ground_friction
-	else:
-		friction = air_friction
-	
-	for raycast in left_rays.get_children():
-		if raycast.is_colliding():
-			print("bruh")
-	for raycast in right_rays.get_children():
-		if raycast.is_colliding():
-			print("shbruh")
-	var snap_vector = Vector2.DOWN * FLOOR_DETECT_DISTANCE if direction.y == 0.0 else Vector2.ZERO
+	var snap_vector = Vector2.DOWN * FLOOR_DETECT_DISTANCE if move_direction.y == 0.0 else Vector2.ZERO
 	_velocity = move_and_slide_with_snap(
 		_velocity, snap_vector, FLOOR_NORMAL, false, 4, 0.9, false
 	)
 	
-	if direction.x != 0:
-		sprite.scale.x = 1 if direction.x > 0 else -1
-	var animation = get_new_animation()
-	animation_player.play(animation)
-	
-	if Input.is_action_just_pressed("ice_spell"):#action button casts freeze spell 
-		casting = true
-		$SpellCast.start()
+	if move_direction.x != 0:
+		sprite.scale.x = 1 if move_direction.x > 0 else -1
+	check_collisions()
+
+
+func check_collisions():
+	if get_slide_count() > 0:
+		for i in get_slide_count():
+			if get_slide_collision(i).collider.is_in_group("icy"):
+				friction = 0
+			else:
+				friction = ground_friction
+	else:
+		friction = air_friction
 
 
 func get_direction(): #get direction of the character 
@@ -120,36 +128,20 @@ func get_dash_direction():
 
 
 func handle_dash(delta):
-	if stored_dir.length() == 0:
-		stored_dir = get_dash_direction()
-	var direction = stored_dir
-	calculate_move_velocity(0.5, direction, DASH_SPEED, false)
+	calculate_move_velocity(0.5, move_direction, DASH_SPEED, false)
 	dash_timer -= delta
 	if dash_timer <= 0:
 		dash_timer = 0
-		dashing = false
+		apply_gravity(delta)
+		handle_movement(delta)
 		_velocity.x *= 0.2 if friction != 0 else 1
-		_velocity.y *= 0.2 if _velocity.y < 0 and !on_ice_wall else 1
-		stored_dir = Vector2(0, 0)
+		_velocity.y *= 0.2 if !haha_ice else 0.6
 	if !is_on_floor():
 		air_dash = true
 
 
-func get_new_animation(): 
-	var animation_new = ""
-#	if is_on_floor():
-#		animation_new = "running" if abs(_velocity.x) > 0.1 else "idle"
-#	else:
-#		animation_new = "jumping"
-	if casting:
-		animation_new = "spell_cast"
-	else:
-		animation_new = "idle"
-	return animation_new
-
-
 func _on_SpellCast_timeout():
-	casting = false
 	$SpellCast.stop()
 	emit_signal("ice_spell", cast_dir)
-	cast_dir = Vector2(0, 0)
+	cast_dir = Vector2.ZERO
+	useless_boolean_that_i_shouldnt_need= false
