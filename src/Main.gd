@@ -2,6 +2,7 @@ extends Node2D
 
 
 const IceSpell = preload("IceSpell.tscn")
+const EarthSpell = preload("EarthSpell.tscn")
 
 export var LIMIT_LEFT = 0
 export var LIMIT_TOP = 0
@@ -28,7 +29,8 @@ func _on_Player_ice_spell(dir):
 	spell.dir = dir
 	add_child(spell)
 	spell.connect("freeze", self, "_on_freeze")
-	
+
+
 func _on_freeze(pos):
 	if foreground.get_cellv(foreground.world_to_map(pos)) >= 0:
 		snowy_foreground.set_cellv(snowy_foreground.world_to_map(pos), foreground.get_cellv(foreground.world_to_map(pos)))
@@ -39,3 +41,15 @@ func _on_freeze(pos):
 	elif foreground.get_cellv(foreground.world_to_map(pos + Vector2(-1, -1))) >= 0:
 		snowy_foreground.set_cellv(snowy_foreground.world_to_map(pos + Vector2(-1, -1)), foreground.get_cellv(foreground.world_to_map(pos + Vector2(-1, -1))))
 		foreground.set_cellv(foreground.world_to_map(pos + Vector2(-1, -1)), -1)
+
+
+func _on_Player_earth_spell(dir):
+	var spell = EarthSpell.instance()
+	spell.position = player.position
+	spell.dir = dir
+	add_child(spell)
+	spell.connect("mushroomify", self, "_on_mushroomify")
+
+
+func _on_mushroomify(pos):
+	pass

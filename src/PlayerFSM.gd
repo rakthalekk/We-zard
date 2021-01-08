@@ -20,13 +20,17 @@ func _input(event):
 			parent.dash_timer = DASH_TIME
 			parent._velocity.y = 0
 			parent.move_direction = parent.get_dash_direction()
-		elif event.is_action_pressed("ice_spell"): #action button casts freeze spell
+		elif event.is_action_pressed("cast"): #action button casts spell
 			set_state(states.cast)
 			parent.get_node("SpellCast").start()
 			parent.useless_boolean_that_i_shouldnt_need = true
 	if [states.wall_slide, states.ice_wall_slide].has(state):
 		if event.is_action_pressed("jump"):
 			parent.wall_jump()
+	if event.is_action_pressed("ice_spell"):
+		parent.current_spell = "ice_spell"
+	elif event.is_action_pressed("earth_spell"):
+		parent.current_spell = "earth_spell"
 
 
 func _state_logic(delta):

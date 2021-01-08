@@ -13,7 +13,9 @@ const DASH_SPEED = Vector2(1200, 1200)
 const DASH_TIME = 0.20
 
 signal ice_spell(dir)
+signal earth_spell(dir)
 
+var current_spell = "ice_spell"
 var move_direction = Vector2.ZERO
 var _velocity = Vector2.ZERO
 var friction = ground_friction
@@ -142,6 +144,6 @@ func handle_dash(delta):
 
 func _on_SpellCast_timeout():
 	$SpellCast.stop()
-	emit_signal("ice_spell", cast_dir)
+	emit_signal(current_spell, cast_dir)
 	cast_dir = Vector2.ZERO
 	useless_boolean_that_i_shouldnt_need= false
