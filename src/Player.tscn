@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://assets/wizard.png" type="Texture" id=1]
 [ext_resource path="res://src/Player.gd" type="Script" id=2]
@@ -39,6 +39,9 @@ tracks/0/keys = {
 [sub_resource type="RectangleShape2D" id=3]
 extents = Vector2( 16.4364, 25.6265 )
 
+[sub_resource type="RectangleShape2D" id=4]
+extents = Vector2( 16.1716, 2.68582 )
+
 [node name="Player" type="KinematicBody2D"]
 collision_layer = 2
 script = ExtResource( 2 )
@@ -67,6 +70,7 @@ wait_time = 0.5
 [node name="CastLine" type="Line2D" parent="."]
 points = PoolVector2Array( 0, 0, 0, 0 )
 width = 2.0
+default_color = Color( 0.4, 0.501961, 1, 1 )
 
 [node name="WallColliders" type="Node2D" parent="."]
 
@@ -97,4 +101,15 @@ position = Vector2( 15, 15 )
 enabled = true
 cast_to = Vector2( 5, 0 )
 collision_mask = 5
+
+[node name="MushroomColliders" type="Node2D" parent="."]
+
+[node name="Down" type="Area2D" parent="MushroomColliders"]
+position = Vector2( 0, 25 )
+collision_layer = 0
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MushroomColliders/Down"]
+shape = SubResource( 4 )
 [connection signal="timeout" from="SpellCast" to="." method="_on_SpellCast_timeout"]
+[connection signal="body_entered" from="MushroomColliders/Down" to="." method="_on_Down_body_entered"]

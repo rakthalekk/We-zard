@@ -11,6 +11,7 @@ export var LIMIT_BOTTOM = 900
 
 onready var foreground = $Foreground
 onready var snowy_foreground = $Snowy_Foreground
+onready var mushrooms = $Mushrooms
 onready var player = $Player
 
 func _ready(): #set camera position
@@ -52,4 +53,26 @@ func _on_Player_earth_spell(dir):
 
 
 func _on_mushroomify(pos):
-	pass
+	if foreground.get_cellv(foreground.world_to_map(pos)) >= 0:
+		_place_shroom(pos)
+	elif foreground.get_cellv(foreground.world_to_map(pos + Vector2(-1, 0))) >= 0:
+		_place_shroom(pos + Vector2(-1, 0))
+	elif foreground.get_cellv(foreground.world_to_map(pos + Vector2(-1, -1))) >= 0:
+		_place_shroom(pos + Vector2(-1, -1))
+	if snowy_foreground.get_cellv(snowy_foreground.world_to_map(pos)) >= 0:
+		_place_shroom(pos, snowy_foreground)
+	elif snowy_foreground.get_cellv(snowy_foreground.world_to_map(pos + Vector2(-1, 0))) >= 0:
+		_place_shroom(pos + Vector2(-1, 0), snowy_foreground)
+	elif snowy_foreground.get_cellv(snowy_foreground.world_to_map(pos + Vector2(-1, -1))) >= 0:
+		_place_shroom(pos + Vector2(-1, -1), snowy_foreground)
+
+
+func _place_shroom(pos, tilemap = foreground):
+	if tilemap.get_cellv(tilemap.world_to_map(pos + Vector2(0, -32))) == -1:
+		mushrooms.set_cellv(mushrooms.world_to_map(pos + Vector2(0, -32)), 0)
+	if tilemap.get_cellv(tilemap.world_to_map(pos + Vector2(-32, 0))) == -1:
+		mushrooms.set_cellv(mushrooms.world_to_map(pos + Vector2(-32, 0)), 1)
+	if tilemap.get_cellv(tilemap.world_to_map(pos + Vector2(32, 0))) == -1:
+		mushrooms.set_cellv(mushrooms.world_to_map(pos + Vector2(32, 0)), 2)
+	if tilemap.get_cellv(tilemap.world_to_map(pos + Vector2(0, 32))) == -1:
+		mushrooms.set_cellv(mushrooms.world_to_map(pos + Vector2(0, 32)), 3)

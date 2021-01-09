@@ -29,12 +29,14 @@ func _input(event):
 			parent.wall_jump()
 	if event.is_action_pressed("ice_spell"):
 		parent.current_spell = "ice_spell"
+		parent.cast_line.default_color = Color(0.4, 0.5, 1)
 	elif event.is_action_pressed("earth_spell"):
 		parent.current_spell = "earth_spell"
+		parent.cast_line.default_color = Color(0.1, 0.7, 0.3)
 
 
 func _state_logic(delta):
-	print(state)
+	#print(state)
 	if ![states.dash, states.cast, states.ice_wall_slide, states.wall_slide].has(state):
 		parent.apply_gravity(delta)
 	elif state == states.ice_wall_slide:

@@ -3,6 +3,7 @@ extends KinematicBody2D
 
 export var speed = Vector2(300.0, 900.0)
 export var wall_jump_speed = Vector2(2000, 800)
+export var minimum_bounce_velocity = Vector2(3000, 1200)
 export (float, 0, 1.0) var ground_friction = 0.5
 export (float, 0, 1.0) var air_friction = 0.05
 export (float, 0, 1.0) var acceleration = 0.1
@@ -25,6 +26,7 @@ var haha_ice = false
 var cast_dir = Vector2(0, 0)
 var useless_boolean_that_i_shouldnt_need = false
 var wall_direction = 1
+var bounce_velocity = Vector2(0, 0)
 
 onready var gravity = ProjectSettings.get("physics/2d/default_gravity")
 onready var animation_player = $AnimationPlayer
@@ -32,6 +34,7 @@ onready var sprite = $Sprite
 onready var cast_line = $CastLine
 onready var left_rays = $"WallColliders/LeftColliders"
 onready var right_rays = $"WallColliders/RightColliders"
+onready var down_shroom = $"MushroomColliders/Down"
 
 
 func check_is_valid_wall(wall_raycasts):
@@ -55,9 +58,11 @@ func update_wall_direction():
 	if !is_near_wall_left and !is_near_wall_right:
 		haha_ice = false
 
+
 func wall_jump():
 	calculate_move_velocity(0.5, Vector2(-wall_direction, -1), wall_jump_speed, false)
-	
+
+
 func display_cast_line():
 	if get_input_dir().length() != 0 && useless_boolean_that_i_shouldnt_need:
 		cast_dir = get_input_dir()
@@ -85,6 +90,10 @@ func handle_movement(delta):
 	
 	if move_direction.x != 0:
 		sprite.scale.x = 1 if move_direction.x > 0 else -1
+	if abs(_velocity.y) > abs(bounce_velocity.y):
+		bounce_velocity.y = _velocity.y
+	elif _velocity.y != 0:
+		bounce_velocity.y = minimum_bounce_velocity.y
 	check_collisions()
 
 
@@ -147,3 +156,9 @@ func _on_SpellCast_timeout():
 	emit_signal(current_spell, cast_dir)
 	cast_dir = Vector2.ZERO
 	useless_boolean_that_i_shouldnt_need= false
+
+
+func _on_Down_body_entered(body):
+	print("shrug", _velocity)
+	_velocity.y = -bounce_velocity.y
+	handle_movement(0.1)

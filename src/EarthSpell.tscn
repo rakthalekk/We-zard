@@ -7,6 +7,126 @@
 [node name="EarthSpell" instance=ExtResource( 1 )]
 script = ExtResource( 3 )
 
+[node name="RayCast2D" parent="Raycasts" index="0"]
+collision_mask = 5
+
+[node name="RayCast2D2" parent="Raycasts" index="1"]
+collision_mask = 5
+
+[node name="RayCast2D3" parent="Raycasts" index="2"]
+collision_mask = 5
+
+[node name="RayCast2D4" parent="Raycasts" index="3"]
+collision_mask = 5
+
+[node name="RayCast2D5" parent="Raycasts" index="4"]
+collision_mask = 5
+
+[node name="RayCast2D6" parent="Raycasts" index="5"]
+collision_mask = 5
+
+[node name="RayCast2D7" parent="Raycasts" index="6"]
+collision_mask = 5
+
+[node name="RayCast2D8" parent="Raycasts" index="7"]
+collision_mask = 5
+
+[node name="RayCast2D9" parent="Raycasts" index="8"]
+collision_mask = 5
+
+[node name="RayCast2D10" parent="Raycasts" index="9"]
+collision_mask = 5
+
+[node name="RayCast2D11" parent="Raycasts" index="10"]
+collision_mask = 5
+
+[node name="RayCast2D12" parent="Raycasts" index="11"]
+collision_mask = 5
+
+[node name="RayCast2D13" parent="Raycasts" index="12"]
+collision_mask = 5
+
+[node name="RayCast2D14" parent="Raycasts" index="13"]
+collision_mask = 5
+
+[node name="RayCast2D15" parent="Raycasts" index="14"]
+collision_mask = 5
+
+[node name="RayCast2D16" parent="Raycasts" index="15"]
+collision_mask = 5
+
+[node name="RayCast2D17" parent="Raycasts" index="16"]
+collision_mask = 5
+
+[node name="RayCast2D18" parent="Raycasts" index="17"]
+collision_mask = 5
+
+[node name="RayCast2D19" parent="Raycasts" index="18"]
+collision_mask = 5
+
+[node name="RayCast2D20" parent="Raycasts" index="19"]
+collision_mask = 5
+
+[node name="RayCast2D21" parent="Raycasts" index="20"]
+collision_mask = 5
+
+[node name="RayCast2D22" parent="Raycasts" index="21"]
+collision_mask = 5
+
+[node name="RayCast2D23" parent="Raycasts" index="22"]
+collision_mask = 5
+
+[node name="RayCast2D24" parent="Raycasts" index="23"]
+collision_mask = 5
+
+[node name="RayCast2D25" parent="Raycasts" index="24"]
+collision_mask = 5
+
+[node name="RayCast2D26" parent="Raycasts" index="25"]
+collision_mask = 5
+
+[node name="RayCast2D27" parent="Raycasts" index="26"]
+collision_mask = 5
+
+[node name="RayCast2D28" parent="Raycasts" index="27"]
+collision_mask = 5
+
+[node name="RayCast2D29" parent="Raycasts" index="28"]
+collision_mask = 5
+
+[node name="RayCast2D30" parent="Raycasts" index="29"]
+collision_mask = 5
+
+[node name="RayCast2D31" parent="Raycasts" index="30"]
+collision_mask = 5
+
+[node name="RayCast2D32" parent="Raycasts" index="31"]
+collision_mask = 5
+
+[node name="RayCast2D33" parent="Raycasts" index="32"]
+collision_mask = 5
+
+[node name="RayCast2D34" parent="Raycasts" index="33"]
+collision_mask = 5
+
+[node name="RayCast2D35" parent="Raycasts" index="34"]
+collision_mask = 5
+
+[node name="RayCast2D36" parent="Raycasts" index="35"]
+collision_mask = 5
+
+[node name="RayCast2D37" parent="Raycasts" index="36"]
+collision_mask = 5
+
+[node name="RayCast2D38" parent="Raycasts" index="37"]
+collision_mask = 5
+
+[node name="RayCast2D39" parent="Raycasts" index="38"]
+collision_mask = 5
+
+[node name="RayCast2D40" parent="Raycasts" index="39"]
+collision_mask = 5
+
 [node name="Sprite" parent="." index="2"]
 texture = ExtResource( 2 )
 [connection signal="body_entered" from="." to="." method="_on_EarthSpell_body_entered"]
