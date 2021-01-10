@@ -3,7 +3,7 @@ extends KinematicBody2D
 
 export var speed = Vector2(300.0, 900.0)
 export var wall_jump_speed = Vector2(2000, 800)
-export var minimum_bounce_velocity = Vector2(3000, 1200)
+export var minimum_bounce_velocity = Vector2(1200, 1200)
 export (float, 0, 1.0) var ground_friction = 0.5
 export (float, 0, 1.0) var air_friction = 0.05
 export (float, 0, 1.0) var acceleration = 0.1
@@ -29,6 +29,7 @@ var wall_direction = 1
 var bounce_velocity = Vector2(0, 0)
 
 onready var gravity = ProjectSettings.get("physics/2d/default_gravity")
+onready var state_machine = $StateMachine # avoid using when possible, manual state changes can be bad
 onready var animation_player = $AnimationPlayer
 onready var sprite = $Sprite
 onready var cast_line = $CastLine
@@ -90,10 +91,15 @@ func handle_movement(delta):
 	
 	if move_direction.x != 0:
 		sprite.scale.x = 1 if move_direction.x > 0 else -1
+		
 	if abs(_velocity.y) > abs(bounce_velocity.y):
 		bounce_velocity.y = _velocity.y
 	elif _velocity.y != 0:
 		bounce_velocity.y = minimum_bounce_velocity.y
+	if abs(_velocity.x) > abs(bounce_velocity.x):
+		bounce_velocity.x = _velocity.x
+	else:
+		bounce_velocity.x = minimum_bounce_velocity.x
 	check_collisions()
 
 
@@ -151,6 +157,12 @@ func handle_dash(delta):
 		air_dash = true
 
 
+func cancel_dash():
+	air_dash = false
+	dash_timer = 0
+	$StateMachine.set_state($StateMachine.states.jump)
+
+
 func _on_SpellCast_timeout():
 	$SpellCast.stop()
 	emit_signal(current_spell, cast_dir)
@@ -159,6 +171,24 @@ func _on_SpellCast_timeout():
 
 
 func _on_Down_body_entered(body):
-	print("shrug", _velocity)
 	_velocity.y = -bounce_velocity.y
-	handle_movement(0.1)
+	cancel_dash()
+	handle_movement(0.05)
+
+
+func _on_Up_body_entered(body):
+	_velocity.y = bounce_velocity.y
+	cancel_dash()
+	handle_movement(0.05)
+
+
+func _on_Left_body_entered(body):
+	_velocity.x = bounce_velocity.x
+	cancel_dash()
+	handle_movement(0.05)
+
+
+func _on_Right_body_entered(body):
+	_velocity.x = -bounce_velocity.x
+	cancel_dash()
+	handle_movement(0.05)
