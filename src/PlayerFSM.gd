@@ -11,6 +11,7 @@ func _ready():
 	add_state("cast")
 	add_state("wall_slide")
 	add_state("ice_wall_slide")
+	add_state("crouch")
 	call_deferred("set_state", states.idle)
 
 func _input(event):
@@ -24,6 +25,8 @@ func _input(event):
 			set_state(states.cast)
 			parent.get_node("SpellCast").start()
 			parent.useless_boolean_that_i_shouldnt_need = true
+		elif event.is_action_pressed("crouch"):
+			set_state(states.crouch)
 	if [states.wall_slide, states.ice_wall_slide].has(state):
 		if event.is_action_pressed("jump"):
 			parent.wall_jump()
@@ -113,6 +116,9 @@ func _get_transition(delta):
 				return states.jump
 			else:
 				return states.fall
+		states.crouch:
+			if !Input.is_action_pressed("crouch"):
+				return states.idle
 	return null
 
 
@@ -122,6 +128,8 @@ func _enter_state(new_state, old_state):
 			parent.animation_player.play('idle')
 		states.cast:
 			parent.animation_player.play("spell_cast")
+		states.crouch:
+			parent.animation_player.play("crouch")
 
 
 func _exit_state(old_state, new_state):
