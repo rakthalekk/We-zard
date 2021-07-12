@@ -118,6 +118,7 @@ func _get_transition(delta):
 				return states.fall
 		states.crouch:
 			if !Input.is_action_pressed("crouch"):
+				parent.sprite.scale.y = 1
 				return states.idle
 	return null
 
