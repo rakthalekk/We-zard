@@ -1,11 +1,11 @@
 class_name Player
 extends KinematicBody2D
 
-export var speed = Vector2(300.0, 900.0)
-export var wall_jump_speed = Vector2(2000, 800)
+export var base_speed = Vector2(400.0, 900.0)
+export var wall_jump_speed = Vector2(2500, 800)
 export var minimum_bounce_velocity = Vector2(1200, 1200)
 export (float, 0, 1.0) var ground_friction = 0.5
-export (float, 0, 1.0) var air_friction = 0.05
+export (float, 0, 1.0) var air_friction = 0.025
 export (float, 0, 1.0) var acceleration = 0.1
 
 const FLOOR_NORMAL = Vector2.UP
@@ -27,6 +27,7 @@ var cast_dir = Vector2(0, 0)
 var useless_boolean_that_i_shouldnt_need = false
 var wall_direction = 1
 var bounce_velocity = Vector2(0, 0)
+var landing_frame = false
 
 onready var gravity = ProjectSettings.get("physics/2d/default_gravity")
 onready var state_machine = $StateMachine # avoid using when possible, manual state changes can be bad
@@ -77,12 +78,18 @@ func apply_gravity(delta, factor = 1):
 func regular_movement():
 	move_direction = get_direction()
 	var is_jump_interrupted = Input.is_action_just_released("jump") and _velocity.y < 0.0
-	calculate_move_velocity(acceleration, move_direction, speed, is_jump_interrupted)
+	calculate_move_velocity(acceleration, move_direction, base_speed, is_jump_interrupted)
 
 
 func handle_movement(delta):
 	if is_on_floor():
-		air_dash = false
+		if landing_frame:
+			landing_frame = false;
+		else:
+			air_dash = false
+	else:
+		if !landing_frame:
+			landing_frame = true
 		
 	var snap_vector = Vector2.DOWN * FLOOR_DETECT_DISTANCE if move_direction.y == 0.0 else Vector2.ZERO
 	_velocity = move_and_slide_with_snap(
@@ -94,7 +101,7 @@ func handle_movement(delta):
 		
 	if abs(_velocity.y) > abs(bounce_velocity.y):
 		bounce_velocity.y = _velocity.y
-	elif _velocity.y != 0:
+	elif !landing_frame:
 		bounce_velocity.y = minimum_bounce_velocity.y
 	if abs(_velocity.x) > abs(bounce_velocity.x):
 		bounce_velocity.x = _velocity.x
@@ -121,13 +128,16 @@ func get_direction(): #get direction of the character
 	)
 	
 	
-func calculate_move_velocity(acc, direction, speedl, is_jump_interrupted): #determine how fast the character is moving
+func calculate_move_velocity(acc, direction, speed, is_jump_interrupted): #determine how fast the character is moving
 	if direction.x != 0:
-		_velocity.x = lerp(_velocity.x, direction.x * speedl.x, acc)
+		if ((direction.x > 0) == (_velocity.x > 0)) && abs(_velocity.x) > abs(speed.x):
+			_velocity.x = lerp(_velocity.x, 0, friction)
+		else:
+			_velocity.x = lerp(_velocity.x, direction.x * speed.x, acc)
 	else:
 		_velocity.x = lerp(_velocity.x, 0, friction)
 	if direction.y != 0.0:
-		_velocity.y = speedl.y * direction.y
+		_velocity.y = speed.y * direction.y
 	if is_jump_interrupted:
 		_velocity.y *= 0.5
 
@@ -148,18 +158,22 @@ func handle_dash(delta):
 	calculate_move_velocity(0.5, move_direction, DASH_SPEED, false)
 	dash_timer -= delta
 	if dash_timer <= 0:
-		dash_timer = 0
-		apply_gravity(delta)
-		handle_movement(delta)
-		_velocity.x *= 0.2 if friction != 0 else 1
-		_velocity.y *= 0.2 if !haha_ice else 0.6
+		reset_dash(delta)
 	if !is_on_floor():
 		air_dash = true
 
 
-func cancel_dash():
-	air_dash = false
+func reset_dash(delta):
 	dash_timer = 0
+	apply_gravity(delta)
+	handle_movement(delta)
+	_velocity.x = move_direction.x * base_speed.x if friction != 0 else _velocity.x
+	_velocity.y *= 0.2 if !haha_ice else 0.6
+
+
+func cancel_dash():
+	if dash_timer > 0:
+		reset_dash(0.001)
 	$StateMachine.set_state($StateMachine.states.jump)
 
 
@@ -171,24 +185,24 @@ func _on_SpellCast_timeout():
 
 
 func _on_Down_body_entered(body):
-	_velocity.y = -bounce_velocity.y
 	cancel_dash()
+	_velocity.y = -bounce_velocity.y
 	handle_movement(0.05)
 
 
 func _on_Up_body_entered(body):
-	_velocity.y = bounce_velocity.y
 	cancel_dash()
+	_velocity.y = bounce_velocity.y
 	handle_movement(0.05)
 
 
 func _on_Left_body_entered(body):
-	_velocity.x = bounce_velocity.x
 	cancel_dash()
+	_velocity.x = bounce_velocity.x
 	handle_movement(0.05)
 
 
 func _on_Right_body_entered(body):
-	_velocity.x = -bounce_velocity.x
 	cancel_dash()
+	_velocity.x = -bounce_velocity.x
 	handle_movement(0.05)
