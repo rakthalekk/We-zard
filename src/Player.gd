@@ -1,15 +1,10 @@
 class_name Player
-extends KinematicBody2D
+extends "res://src/Actor.gd"
 
 export var base_speed = Vector2(400.0, 900.0)
 export var wall_jump_speed = Vector2(2500, 800)
-export var minimum_bounce_velocity = Vector2(1200, 1200)
-export (float, 0, 1.0) var ground_friction = 0.5
-export (float, 0, 1.0) var air_friction = 0.025
 export (float, 0, 1.0) var acceleration = 0.1
 
-const FLOOR_NORMAL = Vector2.UP
-const FLOOR_DETECT_DISTANCE = 20.0
 const DASH_SPEED = Vector2(1200, 1200)
 const DASH_TIME = 0.20
 
@@ -18,21 +13,14 @@ signal earth_spell(dir)
 
 var current_spell = "ice_spell"
 var move_direction = Vector2.ZERO
-var _velocity = Vector2.ZERO
-var friction = ground_friction
 var dash_timer = 0
 var air_dash = false
 var haha_ice = false
 var cast_dir = Vector2(0, 0)
 var useless_boolean_that_i_shouldnt_need = false
 var wall_direction = 1
-var bounce_velocity = Vector2(0, 0)
-var landing_frame = false
 
-onready var gravity = ProjectSettings.get("physics/2d/default_gravity")
 onready var state_machine = $StateMachine # avoid using when possible, manual state changes can be bad
-onready var animation_player = $AnimationPlayer
-onready var sprite = $Sprite
 onready var cast_line = $CastLine
 onready var left_rays = $"WallColliders/LeftColliders"
 onready var right_rays = $"WallColliders/RightColliders"
@@ -69,10 +57,6 @@ func display_cast_line():
 	if get_input_dir().length() != 0 && useless_boolean_that_i_shouldnt_need:
 		cast_dir = get_input_dir()
 	cast_line.points[1] = 200 * cast_dir
-	
-	
-func apply_gravity(delta, factor = 1):
-	_velocity.y += factor * gravity * delta
 
 
 func regular_movement():
@@ -82,15 +66,11 @@ func regular_movement():
 
 
 func handle_movement(delta):
-	if is_on_floor():
-		if landing_frame:
-			landing_frame = false;
-		else:
-			air_dash = false
-	else:
-		if !landing_frame:
-			landing_frame = true
+	if is_on_floor() && !landing_frame:
+		air_dash = false
 		
+	check_bounce(delta)
+	
 	var snap_vector = Vector2.DOWN * FLOOR_DETECT_DISTANCE if move_direction.y == 0.0 else Vector2.ZERO
 	_velocity = move_and_slide_with_snap(
 		_velocity, snap_vector, FLOOR_NORMAL, false, 4, 0.9, false
@@ -98,15 +78,7 @@ func handle_movement(delta):
 	
 	if move_direction.x != 0:
 		sprite.scale.x = 1 if move_direction.x > 0 else -1
-		
-	if abs(_velocity.y) > abs(bounce_velocity.y):
-		bounce_velocity.y = _velocity.y
-	elif !landing_frame:
-		bounce_velocity.y = minimum_bounce_velocity.y
-	if abs(_velocity.x) > abs(bounce_velocity.x):
-		bounce_velocity.x = _velocity.x
-	else:
-		bounce_velocity.x = minimum_bounce_velocity.x
+	
 	check_collisions()
 
 

@@ -1,10 +1,11 @@
-[gd_scene load_steps=23 format=2]
+[gd_scene load_steps=25 format=2]
 
 [ext_resource path="res://src/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://assets/tileset.png" type="Texture" id=2]
 [ext_resource path="res://src/Main.gd" type="Script" id=3]
 [ext_resource path="res://assets/snowy_tileset.png" type="Texture" id=4]
 [ext_resource path="res://assets/mush.png" type="Texture" id=5]
+[ext_resource path="res://src/Mushroom.gd" type="Script" id=6]
 
 [sub_resource type="ConvexPolygonShape2D" id=1]
 points = PoolVector2Array( 0, 0, 32, 0, 32, 32, 0, 32 )
@@ -302,6 +303,9 @@ points = PoolVector2Array( 0, 0, 32, 0, 32, 6.04718, 0, 5.81462 )
 } ]
 3/z_index = 0
 
+[sub_resource type="RectangleShape2D" id=18]
+extents = Vector2( 38.0317, 16.5788 )
+
 [node name="Main" type="Node2D"]
 script = ExtResource( 3 )
 LIMIT_RIGHT = 1856
@@ -334,5 +338,45 @@ format = 1
 
 [node name="Player" parent="." instance=ExtResource( 1 )]
 position = Vector2( 377.231, 395.369 )
+
+[node name="MushroomProto" type="Node" parent="."]
+
+[node name="Mushroom" type="Area2D" parent="MushroomProto"]
+position = Vector2( 1110.69, 877.187 )
+script = ExtResource( 6 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MushroomProto/Mushroom"]
+shape = SubResource( 18 )
+
+[node name="Sprite" type="Sprite" parent="MushroomProto/Mushroom"]
+scale = Vector2( 0.554551, 0.860797 )
+texture = ExtResource( 5 )
+
+[node name="Mushroom2" type="Area2D" parent="MushroomProto"]
+position = Vector2( 1104.4, 55.6978 )
+script = ExtResource( 6 )
+dir = Vector2( 0, 1 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MushroomProto/Mushroom2"]
+shape = SubResource( 18 )
+
+[node name="Sprite" type="Sprite" parent="MushroomProto/Mushroom2"]
+scale = Vector2( 0.554551, 0.860797 )
+texture = ExtResource( 5 )
+
+[node name="Mushroom3" type="Area2D" parent="MushroomProto"]
+position = Vector2( 1234.59, 299.778 )
+script = ExtResource( 6 )
+dir = Vector2( -1, 0 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MushroomProto/Mushroom3"]
+shape = SubResource( 18 )
+
+[node name="Sprite" type="Sprite" parent="MushroomProto/Mushroom3"]
+scale = Vector2( 0.554551, 0.860797 )
+texture = ExtResource( 5 )
 [connection signal="earth_spell" from="Player" to="." method="_on_Player_earth_spell"]
 [connection signal="ice_spell" from="Player" to="." method="_on_Player_ice_spell"]
+[connection signal="body_entered" from="MushroomProto/Mushroom" to="MushroomProto/Mushroom" method="_on_Mushroom_body_entered"]
+[connection signal="body_entered" from="MushroomProto/Mushroom2" to="MushroomProto/Mushroom2" method="_on_Mushroom_body_entered"]
+[connection signal="body_entered" from="MushroomProto/Mushroom3" to="MushroomProto/Mushroom3" method="_on_Mushroom_body_entered"]
