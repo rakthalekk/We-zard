@@ -33,17 +33,17 @@ func handle_movement(delta):
 func check_bounce(delta):
 	if is_on_floor():
 		if landing_frame:
-			landing_frame = false;
+			landing_frame = false
 	else:
 		if !landing_frame:
 			landing_frame = true
 	
 	if abs(_velocity.y) > abs(bounce_velocity.y):
-		bounce_velocity.y = _velocity.y
+		bounce_velocity.y = abs(_velocity.y) - 10
 	elif !landing_frame:
 		bounce_velocity.y = minimum_bounce_velocity.y
 	if abs(_velocity.x) > abs(bounce_velocity.x):
-		bounce_velocity.x = _velocity.x
+		bounce_velocity.x = abs(_velocity.x)
 	else:
 		bounce_velocity.x = minimum_bounce_velocity.x
 

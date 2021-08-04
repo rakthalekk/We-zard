@@ -24,7 +24,6 @@ onready var state_machine = $StateMachine # avoid using when possible, manual st
 onready var cast_line = $CastLine
 onready var left_rays = $"WallColliders/LeftColliders"
 onready var right_rays = $"WallColliders/RightColliders"
-onready var down_shroom = $"MushroomColliders/Down"
 
 
 func check_is_valid_wall(wall_raycasts):
@@ -71,10 +70,7 @@ func handle_movement(delta):
 		
 	check_bounce(delta)
 	
-	var snap_vector = Vector2.DOWN * FLOOR_DETECT_DISTANCE if move_direction.y == 0.0 else Vector2.ZERO
-	_velocity = move_and_slide_with_snap(
-		_velocity, snap_vector, FLOOR_NORMAL, false, 4, 0.9, false
-	)
+	apply_velocity(delta)
 	
 	if move_direction.x != 0:
 		sprite.scale.x = 1 if move_direction.x > 0 else -1
@@ -82,13 +78,31 @@ func handle_movement(delta):
 	check_collisions()
 
 
+func apply_velocity(delta):
+	var snap_vector = Vector2.DOWN * FLOOR_DETECT_DISTANCE if move_direction.y == 0.0 else Vector2.ZERO
+	_velocity = move_and_slide_with_snap(
+		_velocity, snap_vector, FLOOR_NORMAL, false, 4, 0.9, false
+	)
+
 func check_collisions():
 	if get_slide_count() > 0:
 		for i in get_slide_count():
-			if get_slide_collision(i).collider.is_in_group("icy"):
+			var col = get_slide_collision(i)
+			if !col:
+				return
+			if col.collider.is_in_group("icy"):
 				friction = 0
 			else:
 				friction = ground_friction
+#			if col.collider.is_in_group("bouncy"):
+#				var dir = col.collider.get_bounce_dir(col, position)
+#				print(get_slide_collision(i).position)
+#				print("bruh:", dir)
+#				if dir.x != 0:
+#					_velocity.x = bounce_velocity.x * dir.x
+#				if dir.y != 0:
+#					_velocity.y = bounce_velocity.y * dir.y
+#				apply_velocity(0.05)
 	else:
 		friction = air_friction
 
@@ -153,28 +167,15 @@ func _on_SpellCast_timeout():
 	$SpellCast.stop()
 	emit_signal(current_spell, cast_dir)
 	cast_dir = Vector2.ZERO
-	useless_boolean_that_i_shouldnt_need= false
+	useless_boolean_that_i_shouldnt_need = false
 
 
-func _on_Down_body_entered(body):
+func _on_ShroomZone_body_entered(body):
 	cancel_dash()
-	_velocity.y = -bounce_velocity.y
+	var dir = body.get_bounce_dir(position)
+	if dir.x != 0:
+		_velocity.x = bounce_velocity.x * dir.x
+	if dir.y != 0:
+		_velocity.y = bounce_velocity.y * dir.y
 	handle_movement(0.05)
-
-
-func _on_Up_body_entered(body):
-	cancel_dash()
-	_velocity.y = bounce_velocity.y
-	handle_movement(0.05)
-
-
-func _on_Left_body_entered(body):
-	cancel_dash()
-	_velocity.x = bounce_velocity.x
-	handle_movement(0.05)
-
-
-func _on_Right_body_entered(body):
-	cancel_dash()
-	_velocity.x = -bounce_velocity.x
-	handle_movement(0.05)
+	pass
