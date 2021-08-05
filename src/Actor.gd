@@ -4,6 +4,7 @@ extends KinematicBody2D
 export var minimum_bounce_velocity = Vector2(1200, 1200)
 export (float, 0, 1.0) var ground_friction = 0.5
 export (float, 0, 1.0) var air_friction = 0.025
+export (float, 0, 1.0) var acceleration = 0.1
 
 const FLOOR_NORMAL = Vector2.UP
 const FLOOR_DETECT_DISTANCE = 20.0
@@ -28,6 +29,8 @@ func handle_movement(delta):
 	)
 	
 	check_bounce(delta)
+	
+	check_collisions()
 
 
 func check_bounce(delta):
@@ -48,7 +51,25 @@ func check_bounce(delta):
 		bounce_velocity.x = minimum_bounce_velocity.x
 
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
+func check_collisions():
+	if get_slide_count() > 0:
+		for i in get_slide_count():
+			var col = get_slide_collision(i)
+			if !col:
+				return
+			if col.collider.is_in_group("icy"):
+				friction = 0
+			else:
+				friction = ground_friction
+	else:
+		friction = air_friction
+
+
+func apply_bounce_velocity(body):
+	var dir = body.get_bounce_dir(position)
+	if dir.x != 0:
+		_velocity.x = bounce_velocity.x * dir.x
+	if dir.y != 0:
+		_velocity.y = bounce_velocity.y * dir.y
+	handle_movement(0.05)
 

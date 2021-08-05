@@ -76,7 +76,7 @@ tracks/0/keys = {
 [sub_resource type="RectangleShape2D" id=4]
 extents = Vector2( 16.4364, 25.6265 )
 
-[sub_resource type="RectangleShape2D" id=7]
+[sub_resource type="RectangleShape2D" id=5]
 extents = Vector2( 18.5554, 27.4806 )
 
 [node name="Player" type="KinematicBody2D"]
@@ -147,6 +147,6 @@ collision_mask = 8
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ShroomZone"]
 position = Vector2( 0, 2 )
-shape = SubResource( 7 )
+shape = SubResource( 5 )
 [connection signal="timeout" from="SpellCast" to="." method="_on_SpellCast_timeout"]
 [connection signal="body_entered" from="ShroomZone" to="." method="_on_ShroomZone_body_entered"]

@@ -3,7 +3,6 @@ extends "res://src/Actor.gd"
 
 export var base_speed = Vector2(400.0, 900.0)
 export var wall_jump_speed = Vector2(2500, 800)
-export (float, 0, 1.0) var acceleration = 0.1
 
 const DASH_SPEED = Vector2(1200, 1200)
 const DASH_TIME = 0.20
@@ -26,7 +25,7 @@ onready var left_rays = $"WallColliders/LeftColliders"
 onready var right_rays = $"WallColliders/RightColliders"
 
 
-func check_is_valid_wall(wall_raycasts):
+func check_raycasts(wall_raycasts):
 	for raycast in wall_raycasts.get_children():
 		if raycast.is_colliding():
 			if raycast.get_collider().get_name() == "Snowy_Foreground":
@@ -38,8 +37,8 @@ func check_is_valid_wall(wall_raycasts):
 
 
 func update_wall_direction():
-	var is_near_wall_left = check_is_valid_wall(left_rays)
-	var is_near_wall_right = check_is_valid_wall(right_rays)
+	var is_near_wall_left = check_raycasts(left_rays)
+	var is_near_wall_right = check_raycasts(right_rays)
 	if is_near_wall_left and is_near_wall_right:
 		wall_direction = move_direction
 	else:
@@ -83,28 +82,6 @@ func apply_velocity(delta):
 	_velocity = move_and_slide_with_snap(
 		_velocity, snap_vector, FLOOR_NORMAL, false, 4, 0.9, false
 	)
-
-func check_collisions():
-	if get_slide_count() > 0:
-		for i in get_slide_count():
-			var col = get_slide_collision(i)
-			if !col:
-				return
-			if col.collider.is_in_group("icy"):
-				friction = 0
-			else:
-				friction = ground_friction
-#			if col.collider.is_in_group("bouncy"):
-#				var dir = col.collider.get_bounce_dir(col, position)
-#				print(get_slide_collision(i).position)
-#				print("bruh:", dir)
-#				if dir.x != 0:
-#					_velocity.x = bounce_velocity.x * dir.x
-#				if dir.y != 0:
-#					_velocity.y = bounce_velocity.y * dir.y
-#				apply_velocity(0.05)
-	else:
-		friction = air_friction
 
 
 func get_direction(): #get direction of the character 
@@ -172,10 +149,4 @@ func _on_SpellCast_timeout():
 
 func _on_ShroomZone_body_entered(body):
 	cancel_dash()
-	var dir = body.get_bounce_dir(position)
-	if dir.x != 0:
-		_velocity.x = bounce_velocity.x * dir.x
-	if dir.y != 0:
-		_velocity.y = bounce_velocity.y * dir.y
-	handle_movement(0.05)
-	pass
+	apply_bounce_velocity(body)
