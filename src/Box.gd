@@ -2,14 +2,14 @@ class_name Box
 extends "res://src/Actor.gd"
 
 export var box_material = "Wood"
-export var push_speed = 300
+export var push_speed = 200
 
 onready var left_ray = $"PushRays/LeftRay"
 onready var right_ray = $"PushRays/RightRay"
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	acceleration = 0.4
 
 
 func _physics_process(delta):
@@ -20,7 +20,6 @@ func _physics_process(delta):
 
 func check_push():
 	var move_direction = 0
-	print(_velocity)
 	if left_ray.is_colliding():
 		var col = left_ray.get_collider()
 		if col.move_direction.x > 0:

@@ -61,6 +61,7 @@ func regular_movement():
 	move_direction = get_direction()
 	var is_jump_interrupted = Input.is_action_just_released("jump") and _velocity.y < 0.0
 	calculate_move_velocity(acceleration, move_direction, base_speed, is_jump_interrupted)
+	print(_velocity)
 
 
 func handle_movement(delta):

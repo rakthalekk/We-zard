@@ -342,3 +342,5 @@ position = Vector2( 377.231, 395.369 )
 position = Vector2( 659, 309 )
 [connection signal="earth_spell" from="Player" to="." method="_on_Player_earth_spell"]
 [connection signal="ice_spell" from="Player" to="." method="_on_Player_ice_spell"]
+
+[editable path="Box"]
