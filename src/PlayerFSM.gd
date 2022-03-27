@@ -30,12 +30,6 @@ func _input(event):
 	if [states.wall_slide, states.ice_wall_slide].has(state):
 		if event.is_action_pressed("jump"):
 			parent.wall_jump()
-	if event.is_action_pressed("ice_spell"):
-		parent.current_spell = "ice_spell"
-		parent.cast_line.default_color = Color(0.4, 0.5, 1)
-	elif event.is_action_pressed("earth_spell"):
-		parent.current_spell = "earth_spell"
-		parent.cast_line.default_color = Color(0.1, 0.7, 0.3)
 
 
 func _state_logic(delta):
