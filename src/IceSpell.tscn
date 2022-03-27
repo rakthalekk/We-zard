@@ -5,4 +5,5 @@
 
 [node name="IceSpell" instance=ExtResource( 2 )]
 script = ExtResource( 1 )
+
 [connection signal="body_entered" from="." to="." method="_on_IceSpell_body_entered"]

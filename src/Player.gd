@@ -141,6 +141,15 @@ func cancel_dash():
 	$StateMachine.set_state($StateMachine.states.jump)
 
 
+func change_spell(spell):
+	if spell == "ice_spell":
+		current_spell = "ice_spell"
+		cast_line.default_color = Color(0.4, 0.5, 1)
+	elif spell == "earth_spell":
+		current_spell = "earth_spell"
+		cast_line.default_color = Color(0.1, 0.7, 0.3)
+
+
 func _on_SpellCast_timeout():
 	$SpellCast.stop()
 	emit_signal(current_spell, cast_dir)
