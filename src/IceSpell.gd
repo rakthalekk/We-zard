@@ -2,7 +2,7 @@ extends Area2D
 
 signal freeze(pos) #sends 'freeze' signal with position coords to main.
 
-export var speed = 10
+export var speed = 20
 var dir: Vector2
 var beeg = false
 
@@ -24,7 +24,7 @@ func _physics_process(_delta):
 		beeg = true
 		sprite.scale = Vector2(1, 1)
 		for ray in raycasts:
-			if ray.is_colliding() && ray.get_collider().get_name() == "Foreground":
+			if ray.is_colliding() && (ray.get_collider().get_name() == "Foreground" || ray.get_collider().get_name() == "NewForeground"):
 				emit_signal("freeze", ray.get_collision_point())
 
 

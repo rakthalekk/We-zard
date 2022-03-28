@@ -28,7 +28,7 @@ onready var right_rays = $"WallColliders/RightColliders"
 func check_raycasts(wall_raycasts):
 	for raycast in wall_raycasts.get_children():
 		if raycast.is_colliding():
-			if raycast.get_collider().get_name() == "Snowy_Foreground":
+			if raycast.get_collider().is_in_group("icy"):
 				haha_ice = true
 			else:
 				haha_ice = false
@@ -61,7 +61,6 @@ func regular_movement():
 	move_direction = get_direction()
 	var is_jump_interrupted = Input.is_action_just_released("jump") and _velocity.y < 0.0
 	calculate_move_velocity(acceleration, move_direction, base_speed, is_jump_interrupted)
-	print(_velocity)
 
 
 func handle_movement(delta):

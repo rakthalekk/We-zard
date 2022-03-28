@@ -6,9 +6,9 @@ func get_bounce_dir(pos, nearby = false):
 		0:
 			return Vector2(0, -1)
 		1:
-			return Vector2(-1, 0)
+			return Vector2(-1, -0.6)
 		2:
-			return Vector2(1, 0)
+			return Vector2(1, -0.6)
 		3:
 			return Vector2(0, 1)
 		-1:

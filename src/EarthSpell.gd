@@ -3,7 +3,7 @@ extends Area2D
 
 signal mushroomify(pos) #sends 'mushroomify' signal with position coords to main.
 
-export var speed = 10
+export var speed = 20
 var dir: Vector2
 var beeg = false
 

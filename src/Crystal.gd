@@ -6,8 +6,7 @@ export(String, "ice_spell", "earth_spell") var spell = "ice_spell"
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	if spell == "earth_spell":
-		$Sprite.modulate = Color(0, 1, 0)
+	$AnimationPlayer.play("spin")
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

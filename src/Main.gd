@@ -10,7 +10,7 @@ export var LIMIT_RIGHT = 3660
 export var LIMIT_BOTTOM = 900
 
 onready var foreground = $Foreground
-onready var snowy_foreground = $Snowy_Foreground
+onready var icy_foreground = $Icy_Foreground
 onready var mushrooms = $Mushrooms
 onready var player = $Player
 
@@ -34,14 +34,16 @@ func _on_Player_ice_spell(dir):
 
 func _on_freeze(pos):
 	if foreground.get_cellv(foreground.world_to_map(pos)) >= 0:
-		snowy_foreground.set_cellv(snowy_foreground.world_to_map(pos), foreground.get_cellv(foreground.world_to_map(pos)))
+		icy_foreground.set_cellv(icy_foreground.world_to_map(pos), foreground.get_cellv(foreground.world_to_map(pos)))
 		foreground.set_cellv(foreground.world_to_map(pos), -1)
 	elif foreground.get_cellv(foreground.world_to_map(pos + Vector2(-1, 0))) >= 0:
-		snowy_foreground.set_cellv(snowy_foreground.world_to_map(pos + Vector2(-1, 0)), foreground.get_cellv(foreground.world_to_map(pos + Vector2(-1, 0))))
+		icy_foreground.set_cellv(icy_foreground.world_to_map(pos + Vector2(-1, 0)), foreground.get_cellv(foreground.world_to_map(pos + Vector2(-1, 0))))
 		foreground.set_cellv(foreground.world_to_map(pos + Vector2(-1, 0)), -1)
 	elif foreground.get_cellv(foreground.world_to_map(pos + Vector2(-1, -1))) >= 0:
-		snowy_foreground.set_cellv(snowy_foreground.world_to_map(pos + Vector2(-1, -1)), foreground.get_cellv(foreground.world_to_map(pos + Vector2(-1, -1))))
+		icy_foreground.set_cellv(icy_foreground.world_to_map(pos + Vector2(-1, -1)), foreground.get_cellv(foreground.world_to_map(pos + Vector2(-1, -1))))
 		foreground.set_cellv(foreground.world_to_map(pos + Vector2(-1, -1)), -1)
+	
+	icy_foreground.update_bitmask_region()
 
 
 func _on_Player_earth_spell(dir):
@@ -59,20 +61,33 @@ func _on_mushroomify(pos):
 		_place_shroom(pos + Vector2(-1, 0))
 	elif foreground.get_cellv(foreground.world_to_map(pos + Vector2(-1, -1))) >= 0:
 		_place_shroom(pos + Vector2(-1, -1))
-	if snowy_foreground.get_cellv(snowy_foreground.world_to_map(pos)) >= 0:
-		_place_shroom(pos, snowy_foreground)
-	elif snowy_foreground.get_cellv(snowy_foreground.world_to_map(pos + Vector2(-1, 0))) >= 0:
-		_place_shroom(pos + Vector2(-1, 0), snowy_foreground)
-	elif snowy_foreground.get_cellv(snowy_foreground.world_to_map(pos + Vector2(-1, -1))) >= 0:
-		_place_shroom(pos + Vector2(-1, -1), snowy_foreground)
+	if icy_foreground.get_cellv(icy_foreground.world_to_map(pos)) >= 0:
+		_place_shroom(pos)
+	elif icy_foreground.get_cellv(icy_foreground.world_to_map(pos + Vector2(-1, 0))) >= 0:
+		_place_shroom(pos + Vector2(-1, 0))
+	elif icy_foreground.get_cellv(icy_foreground.world_to_map(pos + Vector2(-1, -1))) >= 0:
+		_place_shroom(pos + Vector2(-1, -1))
 
 
-func _place_shroom(pos, tilemap = foreground):
-	if tilemap.get_cellv(tilemap.world_to_map(pos + Vector2(0, -32))) == -1:
-		mushrooms.set_cellv(mushrooms.world_to_map(pos + Vector2(0, -32)), 0)
-	if tilemap.get_cellv(tilemap.world_to_map(pos + Vector2(-32, 0))) == -1:
-		mushrooms.set_cellv(mushrooms.world_to_map(pos + Vector2(-32, 0)), 1)
-	if tilemap.get_cellv(tilemap.world_to_map(pos + Vector2(32, 0))) == -1:
-		mushrooms.set_cellv(mushrooms.world_to_map(pos + Vector2(32, 0)), 2)
-	if tilemap.get_cellv(tilemap.world_to_map(pos + Vector2(0, 32))) == -1:
-		mushrooms.set_cellv(mushrooms.world_to_map(pos + Vector2(0, 32)), 3)
+func _place_shroom(pos):
+	# Downwards mushrooms
+	if (foreground.get_cellv(foreground.world_to_map(pos + Vector2(0, -64))) == -1 &&
+			icy_foreground.get_cellv(icy_foreground.world_to_map(pos + Vector2(0, -64))) == -1):
+		mushrooms.set_cellv(mushrooms.world_to_map(pos + Vector2(0, -64)), 0)
+	
+	# Left facing mushrooms
+	if (foreground.get_cellv(foreground.world_to_map(pos + Vector2(-64, 0))) == -1 &&
+			icy_foreground.get_cellv(icy_foreground.world_to_map(pos + Vector2(-64, 0))) == -1):
+		mushrooms.set_cellv(mushrooms.world_to_map(pos + Vector2(-64, 0)), 1)
+	
+	# Right facing mushrooms
+	if (foreground.get_cellv(foreground.world_to_map(pos + Vector2(64, 0))) == -1 &&
+			icy_foreground.get_cellv(icy_foreground.world_to_map(pos + Vector2(64, 0))) == -1):
+		mushrooms.set_cellv(mushrooms.world_to_map(pos + Vector2(64, 0)), 2)
+	
+	# Upwards mushrooms
+	if (foreground.get_cellv(foreground.world_to_map(pos + Vector2(0, 64))) == -1 &&
+			icy_foreground.get_cellv(icy_foreground.world_to_map(pos + Vector2(0, 64))) == -1):
+		mushrooms.set_cellv(mushrooms.world_to_map(pos + Vector2(0, 64)), 3)
+		
+	mushrooms.update_bitmask_region()
