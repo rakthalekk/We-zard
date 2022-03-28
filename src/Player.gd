@@ -47,6 +47,7 @@ func update_wall_direction():
 		haha_ice = false
 
 
+# No longer in use, keeping in case we want to re-add
 func wall_jump():
 	calculate_move_velocity(0.5, Vector2(-wall_direction, -1), wall_jump_speed, false)
 

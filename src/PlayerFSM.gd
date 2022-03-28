@@ -27,9 +27,9 @@ func _input(event):
 			parent.useless_boolean_that_i_shouldnt_need = true
 		elif event.is_action_pressed("crouch"):
 			set_state(states.crouch)
-	if [states.wall_slide, states.ice_wall_slide].has(state):
-		if event.is_action_pressed("jump"):
-			parent.wall_jump()
+#	if [states.wall_slide, states.ice_wall_slide].has(state):
+#		if event.is_action_pressed("jump"):
+#			parent.wall_jump()
 
 
 func _state_logic(delta):
@@ -80,8 +80,8 @@ func _get_transition(delta):
 			elif parent._velocity.y >= 0:
 				return states.fall
 		states.fall:
-			if parent.wall_direction != 0:
-				return states.wall_slide
+#			if parent.wall_direction != 0:
+#				return states.wall_slide
 			if parent.is_on_floor():
 				return states.idle
 			elif parent._velocity.y < 0:
@@ -100,11 +100,11 @@ func _get_transition(delta):
 					return states.idle
 				else:
 					return states.fall
-		states.wall_slide:
-			if parent.is_on_floor():
-				return states.idle
-			elif parent.wall_direction == 0:
-				return states.fall
+#		states.wall_slide:
+#			if parent.is_on_floor():
+#				return states.idle
+#			elif parent.wall_direction == 0:
+#				return states.fall
 		states.ice_wall_slide:
 			if parent._velocity.y < 0:
 				return states.jump
