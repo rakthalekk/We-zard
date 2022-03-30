@@ -93,9 +93,20 @@ func get_direction(): #get direction of the character
 	
 	
 func calculate_move_velocity(acc, direction, speed, is_jump_interrupted): #determine how fast the character is moving
+	# Player is moving horizontally
 	if direction.x != 0:
+		# If player's velocity is faster than speed, only use friction
 		if ((direction.x > 0) == (_velocity.x > 0)) && abs(_velocity.x) > abs(speed.x):
 			_velocity.x = lerp(_velocity.x, 0, friction)
+		
+		# If velocity is faster than speed, and player is pushing in other direction, reduce acceleration
+		elif abs(_velocity.x) > abs(speed.x):
+			if is_on_floor():
+				_velocity.x = lerp(_velocity.x, direction.x * speed.x, acc / 2.5)
+			else:
+				_velocity.x = lerp(_velocity.x, direction.x * speed.x, acc / 3.5)
+		
+		# Otherwise, use normal acceleration
 		else:
 			_velocity.x = lerp(_velocity.x, direction.x * speed.x, acc)
 	else:
@@ -119,6 +130,8 @@ func get_dash_direction():
 
 
 func handle_dash(delta):
+	if dash_timer > DASH_TIME - delta * 3:
+		move_direction = get_dash_direction()
 	calculate_move_velocity(0.5, move_direction, DASH_SPEED, false)
 	dash_timer -= delta
 	if dash_timer <= 0:
