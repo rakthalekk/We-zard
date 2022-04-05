@@ -21,20 +21,22 @@ func _input(event):
 			parent.dash_timer = DASH_TIME
 			parent._velocity.y = 0
 			parent.move_direction = parent.get_dash_direction()
-		elif event.is_action_pressed("cast"): #action button casts spell
+		elif event.is_action_pressed("cast") && parent.spell_cooldown.time_left == 0: #action button casts spell
 			set_state(states.cast)
-			parent.get_node("SpellCast").start()
 			parent.useless_boolean_that_i_shouldnt_need = true
 		elif event.is_action_pressed("crouch"):
 			set_state(states.crouch)
-#	if [states.wall_slide, states.ice_wall_slide].has(state):
-#		if event.is_action_pressed("jump"):
-#			parent.wall_jump()
+	# Casts spell on release
+	if event.is_action_released("cast") && parent.spell_cooldown.time_left == 0:
+		parent.cast_spell()
+	if [states.wall_slide, states.ice_wall_slide].has(state):
+		if event.is_action_pressed("jump"):
+			parent.wall_jump()
 
 
 func _state_logic(delta):
-	#print(state)
-	if ![states.dash, states.cast, states.ice_wall_slide, states.wall_slide].has(state):
+	#, states.cast
+	if ![states.dash, states.ice_wall_slide, states.wall_slide].has(state):
 		parent.apply_gravity(delta)
 	elif state == states.ice_wall_slide:
 		parent.apply_gravity(delta, 0.7)
@@ -44,8 +46,8 @@ func _state_logic(delta):
 		parent.handle_dash(delta)
 	else:
 		parent.regular_movement()
-	if state == states.cast:
-		parent._velocity = Vector2.ZERO
+#	if state == states.cast:
+#		parent._velocity = Vector2.ZERO
 	parent.update_wall_direction()
 	parent.display_cast_line()
 	parent.handle_movement(delta)
@@ -80,8 +82,8 @@ func _get_transition(delta):
 			elif parent._velocity.y >= 0:
 				return states.fall
 		states.fall:
-#			if parent.wall_direction != 0:
-#				return states.wall_slide
+			if parent.wall_direction != 0:
+				return states.wall_slide
 			if parent.is_on_floor():
 				return states.idle
 			elif parent._velocity.y < 0:
@@ -95,16 +97,16 @@ func _get_transition(delta):
 				else:
 					return states.fall
 		states.cast:
-			if parent.get_node("SpellCast").is_stopped():
+			if parent.get_node("SpellCooldown").is_stopped():
 				if parent.is_on_floor():
 					return states.idle
 				else:
 					return states.fall
-#		states.wall_slide:
-#			if parent.is_on_floor():
-#				return states.idle
-#			elif parent.wall_direction == 0:
-#				return states.fall
+		states.wall_slide:
+			if parent.is_on_floor():
+				return states.idle
+			elif parent.wall_direction == 0:
+				return states.fall
 		states.ice_wall_slide:
 			if parent._velocity.y < 0:
 				return states.jump

@@ -3,7 +3,7 @@
 [ext_resource path="res://assets/ice_spell.png" type="Texture" id=2]
 
 [sub_resource type="CircleShape2D" id=1]
-radius = 12.1701
+radius = 25.0799
 
 [node name="Spell" type="Area2D"]
 collision_layer = 2147483648
@@ -14,164 +14,205 @@ collision_mask = 5
 [node name="RayCast2D" type="RayCast2D" parent="Raycasts"]
 enabled = true
 cast_to = Vector2( 0, 70 )
+collision_mask = 5
 
 [node name="RayCast2D2" type="RayCast2D" parent="Raycasts"]
 enabled = true
 cast_to = Vector2( 10, 68 )
+collision_mask = 5
 
 [node name="RayCast2D3" type="RayCast2D" parent="Raycasts"]
 enabled = true
 cast_to = Vector2( 20, 66 )
+collision_mask = 5
 
 [node name="RayCast2D4" type="RayCast2D" parent="Raycasts"]
 enabled = true
 cast_to = Vector2( 30, 62 )
+collision_mask = 5
 
 [node name="RayCast2D5" type="RayCast2D" parent="Raycasts"]
 enabled = true
 cast_to = Vector2( 40, 56 )
+collision_mask = 5
 
 [node name="RayCast2D6" type="RayCast2D" parent="Raycasts"]
 enabled = true
 cast_to = Vector2( 50, 50 )
+collision_mask = 5
 
 [node name="RayCast2D7" type="RayCast2D" parent="Raycasts"]
 enabled = true
 cast_to = Vector2( 56, 40 )
+collision_mask = 5
 
 [node name="RayCast2D8" type="RayCast2D" parent="Raycasts"]
 enabled = true
 cast_to = Vector2( 62, 30 )
+collision_mask = 5
 
 [node name="RayCast2D9" type="RayCast2D" parent="Raycasts"]
 enabled = true
 cast_to = Vector2( 66, 20 )
+collision_mask = 5
 
 [node name="RayCast2D10" type="RayCast2D" parent="Raycasts"]
 enabled = true
 cast_to = Vector2( 68, 10 )
+collision_mask = 5
 
 [node name="RayCast2D11" type="RayCast2D" parent="Raycasts"]
 enabled = true
 cast_to = Vector2( 70, 0 )
+collision_mask = 5
 
 [node name="RayCast2D12" type="RayCast2D" parent="Raycasts"]
 enabled = true
 cast_to = Vector2( -10, 68 )
+collision_mask = 5
 
 [node name="RayCast2D13" type="RayCast2D" parent="Raycasts"]
 enabled = true
 cast_to = Vector2( -20, 66 )
+collision_mask = 5
 
 [node name="RayCast2D14" type="RayCast2D" parent="Raycasts"]
 enabled = true
 cast_to = Vector2( -30, 62 )
+collision_mask = 5
 
 [node name="RayCast2D15" type="RayCast2D" parent="Raycasts"]
 enabled = true
 cast_to = Vector2( -40, 56 )
+collision_mask = 5
 
 [node name="RayCast2D16" type="RayCast2D" parent="Raycasts"]
 enabled = true
 cast_to = Vector2( -50, 50 )
+collision_mask = 5
 
 [node name="RayCast2D17" type="RayCast2D" parent="Raycasts"]
 enabled = true
 cast_to = Vector2( -56, 40 )
+collision_mask = 5
 
 [node name="RayCast2D18" type="RayCast2D" parent="Raycasts"]
 enabled = true
 cast_to = Vector2( -62, 30 )
+collision_mask = 5
 
 [node name="RayCast2D19" type="RayCast2D" parent="Raycasts"]
 enabled = true
 cast_to = Vector2( -66, 20 )
+collision_mask = 5
 
 [node name="RayCast2D20" type="RayCast2D" parent="Raycasts"]
 enabled = true
 cast_to = Vector2( -68, 10 )
+collision_mask = 5
 
 [node name="RayCast2D21" type="RayCast2D" parent="Raycasts"]
 enabled = true
 cast_to = Vector2( -70, 0 )
+collision_mask = 5
 
 [node name="RayCast2D22" type="RayCast2D" parent="Raycasts"]
 enabled = true
 cast_to = Vector2( 0, -70 )
+collision_mask = 5
 
 [node name="RayCast2D23" type="RayCast2D" parent="Raycasts"]
 enabled = true
 cast_to = Vector2( 10, -68 )
+collision_mask = 5
 
 [node name="RayCast2D24" type="RayCast2D" parent="Raycasts"]
 enabled = true
 cast_to = Vector2( 20, -66 )
+collision_mask = 5
 
 [node name="RayCast2D25" type="RayCast2D" parent="Raycasts"]
 enabled = true
 cast_to = Vector2( 30, -62 )
+collision_mask = 5
 
 [node name="RayCast2D26" type="RayCast2D" parent="Raycasts"]
 enabled = true
 cast_to = Vector2( 40, -56 )
+collision_mask = 5
 
 [node name="RayCast2D27" type="RayCast2D" parent="Raycasts"]
 enabled = true
 cast_to = Vector2( 50, -50 )
+collision_mask = 5
 
 [node name="RayCast2D28" type="RayCast2D" parent="Raycasts"]
 enabled = true
 cast_to = Vector2( 56, -40 )
+collision_mask = 5
 
 [node name="RayCast2D29" type="RayCast2D" parent="Raycasts"]
 enabled = true
 cast_to = Vector2( 62, -30 )
+collision_mask = 5
 
 [node name="RayCast2D30" type="RayCast2D" parent="Raycasts"]
 enabled = true
 cast_to = Vector2( 66, -20 )
+collision_mask = 5
 
 [node name="RayCast2D31" type="RayCast2D" parent="Raycasts"]
 enabled = true
 cast_to = Vector2( 68, -10 )
+collision_mask = 5
 
 [node name="RayCast2D32" type="RayCast2D" parent="Raycasts"]
 enabled = true
 cast_to = Vector2( -10, -68 )
+collision_mask = 5
 
 [node name="RayCast2D33" type="RayCast2D" parent="Raycasts"]
 enabled = true
 cast_to = Vector2( -20, -66 )
+collision_mask = 5
 
 [node name="RayCast2D34" type="RayCast2D" parent="Raycasts"]
 enabled = true
 cast_to = Vector2( -30, -62 )
+collision_mask = 5
 
 [node name="RayCast2D35" type="RayCast2D" parent="Raycasts"]
 enabled = true
 cast_to = Vector2( -40, -56 )
+collision_mask = 5
 
 [node name="RayCast2D36" type="RayCast2D" parent="Raycasts"]
 enabled = true
 cast_to = Vector2( -50, -50 )
+collision_mask = 5
 
 [node name="RayCast2D37" type="RayCast2D" parent="Raycasts"]
 enabled = true
 cast_to = Vector2( -56, -40 )
+collision_mask = 5
 
 [node name="RayCast2D38" type="RayCast2D" parent="Raycasts"]
 enabled = true
 cast_to = Vector2( -62, -30 )
+collision_mask = 5
 
 [node name="RayCast2D39" type="RayCast2D" parent="Raycasts"]
 enabled = true
 cast_to = Vector2( -66, -20 )
+collision_mask = 5
 
 [node name="RayCast2D40" type="RayCast2D" parent="Raycasts"]
 enabled = true
 cast_to = Vector2( -68, -10 )
+collision_mask = 5
 
 [node name="Timer" type="Timer" parent="."]
+wait_time = 0.2
 one_shot = true
 
 [node name="Sprite" type="Sprite" parent="."]
@@ -180,4 +221,7 @@ texture = ExtResource( 2 )
 
 [node name="Center" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

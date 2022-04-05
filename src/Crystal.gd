@@ -1,7 +1,7 @@
 extends Area2D
 
 
-export(String, "ice_spell", "earth_spell") var spell = "ice_spell"
+export(String, "ice_spell", "earth_spell", "fire_spell") var spell = "ice_spell"
 
 
 # Called when the node enters the scene tree for the first time.

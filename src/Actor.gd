@@ -4,7 +4,7 @@ extends KinematicBody2D
 export var minimum_bounce_velocity = Vector2(1200, 1200)
 export var maximum_bounce_velocity = Vector2(2000, 2000)
 export (float, 0, 1.0) var ground_friction = 0.5
-export (float, 0, 1.0) var air_friction = 0.025
+export (float, 0, 1.0) var air_friction = 0.005
 export (float, 0, 1.0) var acceleration = 0.1
 
 const FLOOR_NORMAL = Vector2.UP
@@ -66,8 +66,10 @@ func check_collisions():
 				return
 			if col.collider.is_in_group("icy"):
 				friction = 0
-			else:
+			elif is_on_floor():
 				friction = ground_friction
+			else:
+				friction = air_friction
 	else:
 		friction = air_friction
 

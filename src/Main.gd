@@ -3,6 +3,7 @@ extends Node2D
 
 const IceSpell = preload("IceSpell.tscn")
 const EarthSpell = preload("EarthSpell.tscn")
+const FireSpell = preload("FireSpell.tscn")
 
 export var LIMIT_LEFT = 0
 export var LIMIT_TOP = 0
@@ -90,4 +91,35 @@ func _place_shroom(pos):
 			icy_foreground.get_cellv(icy_foreground.world_to_map(pos + Vector2(0, 64))) == -1):
 		mushrooms.set_cellv(mushrooms.world_to_map(pos + Vector2(0, 64)), 3)
 		
+	mushrooms.update_bitmask_region()
+
+
+func _on_Player_fire_spell(dir):
+	var spell = FireSpell.instance()
+	spell.position = player.position
+	spell.dir = dir
+	add_child(spell)
+	spell.connect("ignite", self, "_on_ignite")
+
+
+func _on_ignite(pos):
+	if icy_foreground.get_cellv(icy_foreground.world_to_map(pos)) >= 0:
+		foreground.set_cellv(foreground.world_to_map(pos), icy_foreground.get_cellv(icy_foreground.world_to_map(pos)))
+		icy_foreground.set_cellv(icy_foreground.world_to_map(pos), -1)
+	elif icy_foreground.get_cellv(icy_foreground.world_to_map(pos + Vector2(-1, 0))) >= 0:
+		foreground.set_cellv(foreground.world_to_map(pos + Vector2(-1, 0)), icy_foreground.get_cellv(icy_foreground.world_to_map(pos + Vector2(-1, 0))))
+		icy_foreground.set_cellv(icy_foreground.world_to_map(pos + Vector2(-1, 0)), -1)
+	elif icy_foreground.get_cellv(icy_foreground.world_to_map(pos + Vector2(-1, -1))) >= 0:
+		foreground.set_cellv(foreground.world_to_map(pos + Vector2(-1, -1)), icy_foreground.get_cellv(icy_foreground.world_to_map(pos + Vector2(-1, -1))))
+		icy_foreground.set_cellv(icy_foreground.world_to_map(pos + Vector2(-1, -1)), -1)
+	
+	if mushrooms.get_cellv(mushrooms.world_to_map(pos)) >= 0:
+		mushrooms.set_cellv(mushrooms.world_to_map(pos), -1)
+	elif mushrooms.get_cellv(mushrooms.world_to_map(pos + Vector2(-1, 0))) >= 0:
+		mushrooms.set_cellv(mushrooms.world_to_map(pos + Vector2(-1, 0)), -1)
+	elif mushrooms.get_cellv(mushrooms.world_to_map(pos + Vector2(-1, -1))) >= 0:
+		mushrooms.set_cellv(mushrooms.world_to_map(pos + Vector2(-1, -1)), -1)
+	
+	foreground.update_bitmask_region()
+	icy_foreground.update_bitmask_region()
 	mushrooms.update_bitmask_region()

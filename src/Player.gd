@@ -1,14 +1,20 @@
 class_name Player
 extends "res://src/Actor.gd"
 
+
+const ICE_WIZARD = preload("res://assets/Player Sprites/ice_wizard.png")
+const EARTH_WIZARD = preload("res://assets/Player Sprites/earth_wizard.png")
+const FIRE_WIZARD = preload("res://assets/Player Sprites/fire_wizard.png")
+
 export var base_speed = Vector2(400.0, 900.0)
-export var wall_jump_speed = Vector2(2500, 800)
+export var wall_jump_speed = Vector2(1200, 800)
 
 const DASH_SPEED = Vector2(1200, 1200)
 const DASH_TIME = 0.20
 
 signal ice_spell(dir)
 signal earth_spell(dir)
+signal fire_spell(dir)
 
 var current_spell = "ice_spell"
 var move_direction = Vector2.ZERO
@@ -23,6 +29,7 @@ onready var state_machine = $StateMachine # avoid using when possible, manual st
 onready var cast_line = $CastLine
 onready var left_rays = $"WallColliders/LeftColliders"
 onready var right_rays = $"WallColliders/RightColliders"
+onready var spell_cooldown = $SpellCooldown
 
 
 func check_raycasts(wall_raycasts):
@@ -115,6 +122,7 @@ func calculate_move_velocity(acc, direction, speed, is_jump_interrupted): #deter
 		_velocity.y = speed.y * direction.y
 	if is_jump_interrupted:
 		_velocity.y *= 0.5
+	
 
 
 func get_input_dir():
@@ -158,13 +166,19 @@ func change_spell(spell):
 	if spell == "ice_spell":
 		current_spell = "ice_spell"
 		cast_line.default_color = Color(0.4, 0.5, 1)
+		sprite.texture = ICE_WIZARD
 	elif spell == "earth_spell":
 		current_spell = "earth_spell"
 		cast_line.default_color = Color(0.1, 0.7, 0.3)
+		sprite.texture = EARTH_WIZARD
+	elif spell == "fire_spell":
+		current_spell = "fire_spell"
+		cast_line.default_color = Color(1, 0.3, 0.3)
+		sprite.texture = FIRE_WIZARD
 
 
-func _on_SpellCast_timeout():
-	$SpellCast.stop()
+func cast_spell():
+	spell_cooldown.start()
 	emit_signal(current_spell, cast_dir)
 	cast_dir = Vector2.ZERO
 	useless_boolean_that_i_shouldnt_need = false
@@ -173,3 +187,4 @@ func _on_SpellCast_timeout():
 func _on_ShroomZone_body_entered(body):
 	cancel_dash()
 	apply_bounce_velocity(body)
+
