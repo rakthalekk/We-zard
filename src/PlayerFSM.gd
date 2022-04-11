@@ -2,6 +2,8 @@ extends "res://src/StateMachine.gd"
 
 const DASH_TIME = 0.20
 
+var casting = false
+
 func _ready():
 	add_state("idle")
 	add_state("run")
@@ -22,21 +24,25 @@ func _input(event):
 			parent._velocity.y = 0
 			parent.move_direction = parent.get_dash_direction()
 		elif event.is_action_pressed("cast") && parent.spell_cooldown.time_left == 0: #action button casts spell
-			set_state(states.cast)
+			casting = true
 			parent.useless_boolean_that_i_shouldnt_need = true
+		elif event.is_action_released("aoe_cast") && parent.spell_cooldown.time_left == 0 && parent.aoe_cast_time.time_left == 0:
+			if parent.current_spell != "fire_spell":
+				set_state(states.cast)
+			parent.cast_aoe_spell()
 		elif event.is_action_pressed("crouch"):
 			set_state(states.crouch)
 	# Casts spell on release
-	if event.is_action_released("cast") && parent.spell_cooldown.time_left == 0:
+	if event.is_action_released("cast") && parent.spell_cooldown.time_left == 0 && casting:
 		parent.cast_spell()
+		casting = false
 	if [states.wall_slide, states.ice_wall_slide].has(state):
 		if event.is_action_pressed("jump"):
 			parent.wall_jump()
 
 
 func _state_logic(delta):
-	#, states.cast
-	if ![states.dash, states.ice_wall_slide, states.wall_slide].has(state):
+	if ![states.dash, states.ice_wall_slide, states.wall_slide, states.cast].has(state):
 		parent.apply_gravity(delta)
 	elif state == states.ice_wall_slide:
 		parent.apply_gravity(delta, 0.7)
@@ -44,10 +50,10 @@ func _state_logic(delta):
 		parent.apply_gravity(delta, 0.1)
 	if state == states.dash:
 		parent.handle_dash(delta)
+	elif state == states.cast:
+		parent._velocity = Vector2.ZERO
 	else:
 		parent.regular_movement()
-#	if state == states.cast:
-#		parent._velocity = Vector2.ZERO
 	parent.update_wall_direction()
 	parent.display_cast_line()
 	parent.handle_movement(delta)
@@ -97,7 +103,7 @@ func _get_transition(delta):
 				else:
 					return states.fall
 		states.cast:
-			if parent.get_node("SpellCooldown").is_stopped():
+			if parent.aoe_cast_time.time_left == 0:
 				if parent.is_on_floor():
 					return states.idle
 				else:

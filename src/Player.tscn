@@ -102,6 +102,10 @@ shape = SubResource( 4 )
 current = true
 
 [node name="SpellCooldown" type="Timer" parent="."]
+wait_time = 0.2
+one_shot = true
+
+[node name="AOECastTime" type="Timer" parent="."]
 wait_time = 0.5
 one_shot = true
 
@@ -148,4 +152,15 @@ collision_mask = 8
 position = Vector2( -1.5, -0.499999 )
 shape = SubResource( 5 )
 
+[node name="WaterCollider" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 32
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WaterCollider"]
+position = Vector2( -1.5, -0.499999 )
+shape = SubResource( 5 )
+
+[connection signal="timeout" from="AOECastTime" to="." method="_on_AOECastTime_timeout"]
 [connection signal="body_entered" from="ShroomZone" to="." method="_on_ShroomZone_body_entered"]
+[connection signal="body_entered" from="WaterCollider" to="." method="_on_WaterCollider_body_entered"]
+[connection signal="body_exited" from="WaterCollider" to="." method="_on_WaterCollider_body_exited"]

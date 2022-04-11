@@ -13,8 +13,11 @@ const DASH_SPEED = Vector2(1200, 1200)
 const DASH_TIME = 0.20
 
 signal ice_spell(dir)
+signal ice_spell_aoe()
 signal earth_spell(dir)
+signal earth_spell_aoe()
 signal fire_spell(dir)
+signal fire_spell_aoe()
 
 var current_spell = "ice_spell"
 var move_direction = Vector2.ZERO
@@ -24,12 +27,15 @@ var haha_ice = false
 var cast_dir = Vector2(0, 0)
 var useless_boolean_that_i_shouldnt_need = false
 var wall_direction = 1
+var in_wind_column = false
+var in_water = false
 
 onready var state_machine = $StateMachine # avoid using when possible, manual state changes can be bad
 onready var cast_line = $CastLine
 onready var left_rays = $"WallColliders/LeftColliders"
 onready var right_rays = $"WallColliders/RightColliders"
 onready var spell_cooldown = $SpellCooldown
+onready var aoe_cast_time = $AOECastTime
 
 
 func check_raycasts(wall_raycasts):
@@ -47,7 +53,7 @@ func update_wall_direction():
 	var is_near_wall_left = check_raycasts(left_rays)
 	var is_near_wall_right = check_raycasts(right_rays)
 	if is_near_wall_left and is_near_wall_right:
-		wall_direction = move_direction
+		wall_direction = move_direction.x
 	else:
 		wall_direction = -int(is_near_wall_left) + int(is_near_wall_right)
 	if !is_near_wall_left and !is_near_wall_right:
@@ -60,8 +66,8 @@ func wall_jump():
 
 
 func display_cast_line():
-	if get_input_dir().length() != 0 && useless_boolean_that_i_shouldnt_need:
-		cast_dir = get_input_dir()
+	if useless_boolean_that_i_shouldnt_need:
+		cast_dir = (get_global_mouse_position() - global_position).normalized()
 	cast_line.points[1] = 200 * cast_dir
 
 
@@ -87,6 +93,8 @@ func handle_movement(delta):
 
 func apply_velocity(delta):
 	var snap_vector = Vector2.DOWN * FLOOR_DETECT_DISTANCE if move_direction.y == 0.0 else Vector2.ZERO
+	if in_water:
+		_velocity *= 0.9
 	_velocity = move_and_slide_with_snap(
 		_velocity, snap_vector, FLOOR_NORMAL, false, 4, 0.9, false
 	)
@@ -152,8 +160,9 @@ func reset_dash(delta):
 	dash_timer = 0
 	apply_gravity(delta)
 	handle_movement(delta)
-	_velocity.x = move_direction.x * base_speed.x if friction != 0 else _velocity.x
-	_velocity.y *= 0.2 if !haha_ice else 0.6
+	_velocity.x = move_direction.x * base_speed.x if friction != 0 || in_wind_column else _velocity.x
+	if !in_wind_column:
+		_velocity.y *= 0.2 if !haha_ice else 1
 
 
 func cancel_dash():
@@ -184,7 +193,28 @@ func cast_spell():
 	useless_boolean_that_i_shouldnt_need = false
 
 
+func cast_aoe_spell():
+	if current_spell == "fire_spell":
+		spell_cooldown.start()
+		emit_signal(current_spell + "_aoe")
+	else:
+		aoe_cast_time.start()
+
+
 func _on_ShroomZone_body_entered(body):
 	cancel_dash()
 	apply_bounce_velocity(body)
 
+
+
+func _on_AOECastTime_timeout():
+	spell_cooldown.start()
+	emit_signal(current_spell + "_aoe")
+
+
+func _on_WaterCollider_body_entered(body):
+	in_water = true
+
+
+func _on_WaterCollider_body_exited(body):
+	in_water = false

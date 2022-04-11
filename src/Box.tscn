@@ -9,9 +9,7 @@ extents = Vector2( 18.3999, 18.5527 )
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 20.9198, 20.4426 )
 
-[node name="Box" type="KinematicBody2D" groups=[
-"entity",
-]]
+[node name="Box" type="KinematicBody2D" groups=["entity"]]
 collision_mask = 3
 script = ExtResource( 2 )
 
@@ -42,4 +40,5 @@ position = Vector2( 18, 0 )
 enabled = true
 cast_to = Vector2( 20, 0 )
 collision_mask = 2
+
 [connection signal="body_entered" from="ShroomZone" to="." method="_on_ShroomZone_body_entered"]

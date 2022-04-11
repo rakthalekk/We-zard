@@ -3,12 +3,13 @@ extends KinematicBody2D
 
 export var minimum_bounce_velocity = Vector2(1200, 1200)
 export var maximum_bounce_velocity = Vector2(2000, 2000)
+export var minimum_flower_bounce_velocity = 1600
 export (float, 0, 1.0) var ground_friction = 0.5
 export (float, 0, 1.0) var air_friction = 0.005
 export (float, 0, 1.0) var acceleration = 0.1
 
 const FLOOR_NORMAL = Vector2.UP
-const FLOOR_DETECT_DISTANCE = 20.0
+const FLOOR_DETECT_DISTANCE = 5.0
 
 var _velocity = Vector2.ZERO
 var friction = ground_friction
@@ -64,6 +65,8 @@ func check_collisions():
 			var col = get_slide_collision(i)
 			if !col:
 				return
+			if col.collider.is_in_group("KILL") && name == "Player":
+				get_tree().change_scene("res://src/Main.tscn")
 			if col.collider.is_in_group("icy"):
 				friction = 0
 			elif is_on_floor():
@@ -76,6 +79,9 @@ func check_collisions():
 
 func apply_bounce_velocity(body):
 	var dir = body.get_bounce_dir(position)
+	if body is BounceFlower:
+		if bounce_velocity.y < minimum_flower_bounce_velocity:
+			bounce_velocity.y = minimum_flower_bounce_velocity
 	if dir.x != 0:
 		_velocity.x = bounce_velocity.x * dir.x
 	if dir.y != 0:

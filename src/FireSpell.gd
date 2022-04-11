@@ -26,7 +26,7 @@ func _physics_process(_delta):
 		beeg = true
 		sprite.scale = Vector2(2, 2)
 		for ray in raycasts:
-			if ray.is_colliding():
+			if ray.is_colliding() && ray.get_collider().get_name() != "Foreground":
 				emit_signal("ignite", ray.get_collision_point())
 
 
