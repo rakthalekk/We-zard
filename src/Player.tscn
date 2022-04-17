@@ -100,6 +100,7 @@ shape = SubResource( 4 )
 
 [node name="Camera" type="Camera2D" parent="."]
 current = true
+zoom = Vector2( 1.25, 1.25 )
 
 [node name="SpellCooldown" type="Timer" parent="."]
 wait_time = 0.2
@@ -160,7 +161,12 @@ collision_mask = 32
 position = Vector2( -1.5, -0.499999 )
 shape = SubResource( 5 )
 
+[node name="OofOuchTimer" type="Timer" parent="."]
+wait_time = 0.05
+one_shot = true
+
 [connection signal="timeout" from="AOECastTime" to="." method="_on_AOECastTime_timeout"]
 [connection signal="body_entered" from="ShroomZone" to="." method="_on_ShroomZone_body_entered"]
 [connection signal="body_entered" from="WaterCollider" to="." method="_on_WaterCollider_body_entered"]
 [connection signal="body_exited" from="WaterCollider" to="." method="_on_WaterCollider_body_exited"]
+[connection signal="timeout" from="OofOuchTimer" to="." method="_on_OofOuchTimer_timeout"]

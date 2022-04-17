@@ -29,6 +29,7 @@ var useless_boolean_that_i_shouldnt_need = false
 var wall_direction = 1
 var in_wind_column = false
 var in_water = false
+var blasting = false
 
 onready var state_machine = $StateMachine # avoid using when possible, manual state changes can be bad
 onready var cast_line = $CastLine
@@ -36,6 +37,7 @@ onready var left_rays = $"WallColliders/LeftColliders"
 onready var right_rays = $"WallColliders/RightColliders"
 onready var spell_cooldown = $SpellCooldown
 onready var aoe_cast_time = $AOECastTime
+onready var oof_ouch_timer = $OofOuchTimer
 
 
 func check_raycasts(wall_raycasts):
@@ -108,6 +110,8 @@ func get_direction(): #get direction of the character
 	
 	
 func calculate_move_velocity(acc, direction, speed, is_jump_interrupted): #determine how fast the character is moving
+	if blasting:
+		friction = 0
 	# Player is moving horizontally
 	if direction.x != 0:
 		# If player's velocity is faster than speed, only use friction
@@ -218,3 +222,7 @@ func _on_WaterCollider_body_entered(body):
 
 func _on_WaterCollider_body_exited(body):
 	in_water = false
+
+
+func _on_OofOuchTimer_timeout():
+	blasting = false

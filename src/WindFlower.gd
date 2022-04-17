@@ -8,6 +8,7 @@ func _ready():
 	if !sprouted:
 		$Sprite.modulate = Color(1, 1, 1, 0.5)
 	else:
+		yield(get_parent().get_parent(), "ready")
 		sprout()
 
 

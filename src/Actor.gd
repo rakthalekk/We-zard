@@ -2,8 +2,8 @@ class_name Actor
 extends KinematicBody2D
 
 export var minimum_bounce_velocity = Vector2(1200, 1200)
-export var maximum_bounce_velocity = Vector2(2000, 2000)
-export var minimum_flower_bounce_velocity = 1600
+export var maximum_bounce_velocity = Vector2(3000, 3000)
+export var minimum_flower_bounce_velocity = 1800
 export (float, 0, 1.0) var ground_friction = 0.5
 export (float, 0, 1.0) var air_friction = 0.005
 export (float, 0, 1.0) var acceleration = 0.1
@@ -66,7 +66,7 @@ func check_collisions():
 			if !col:
 				return
 			if col.collider.is_in_group("KILL") && name == "Player":
-				get_tree().change_scene("res://src/Main.tscn")
+				get_tree().change_scene("res://src/Level.tscn")
 			if col.collider.is_in_group("icy"):
 				friction = 0
 			elif is_on_floor():

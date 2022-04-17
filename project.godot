@@ -54,6 +54,11 @@ config/name="We-zard"
 run/main_scene="res://src/Main.tscn"
 config/icon="res://icon.png"
 
+[display]
+
+window/size/width=1500
+window/size/height=750
+
 [editor_plugins]
 
 enabled=PoolStringArray(  )

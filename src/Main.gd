@@ -22,6 +22,12 @@ onready var water = $Water
 onready var player = $Player
 
 func _ready(): #set camera position
+	player.connect("ice_spell", self, "_on_Player_ice_spell")
+	player.connect("ice_spell_aoe", self, "_on_Player_ice_spell_aoe")
+	player.connect("earth_spell", self, "_on_Player_earth_spell")
+	player.connect("earth_spell_aoe", self, "_on_Player_earth_spell_aoe")
+	player.connect("fire_spell", self, "_on_Player_fire_spell")
+	player.connect("fire_spell_aoe", self, "_on_Player_fire_spell_aoe")
 	for child in get_children():
 		if child is Player:
 			var camera = child.get_node("Camera")

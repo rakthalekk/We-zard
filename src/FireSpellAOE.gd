@@ -26,5 +26,8 @@ func _on_ShroomZone_body_entered(body):
 
 func _on_BlastRadius_body_entered(body):
 	if body != self:
-		var dir = (body.global_position - global_position - Vector2(0, 5)).normalized()
-		body._velocity += dir * 1800
+		var dir = (body.global_position - global_position - Vector2(0, 10)).normalized()
+		if body is Player:
+			body.blasting = true
+			body.oof_ouch_timer.start()
+		body._velocity = dir * 1800
