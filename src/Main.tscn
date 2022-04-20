@@ -1181,10 +1181,3 @@ collision_layer = 32
 collision_mask = 0
 format = 1
 tile_data = PoolIntArray( 1245191, 0, 0, 1245192, 0, 0, 1245193, 0, 0, 1245194, 0, 0, 1245195, 0, 0, 1245196, 0, 0, 1245197, 0, 0, 1245198, 0, 0, 1245199, 0, 0, 1310727, 0, 65536, 1310728, 0, 65536, 1310729, 0, 65536, 1310730, 0, 65536, 1310731, 0, 65536, 1310732, 0, 65536, 1310733, 0, 65536, 1310734, 0, 65536, 1310735, 0, 65536, 1376263, 0, 65536, 1376264, 0, 65536, 1376265, 0, 65536, 1376266, 0, 65536, 1376267, 0, 65536, 1376268, 0, 65536, 1376269, 0, 65536, 1376270, 0, 65536, 1376271, 0, 65536 )
-
-[connection signal="earth_spell" from="Player" to="." method="_on_Player_earth_spell"]
-[connection signal="earth_spell_aoe" from="Player" to="." method="_on_Player_earth_spell_aoe"]
-[connection signal="fire_spell" from="Player" to="." method="_on_Player_fire_spell"]
-[connection signal="fire_spell_aoe" from="Player" to="." method="_on_Player_fire_spell_aoe"]
-[connection signal="ice_spell" from="Player" to="." method="_on_Player_ice_spell"]
-[connection signal="ice_spell_aoe" from="Player" to="." method="_on_Player_ice_spell_aoe"]

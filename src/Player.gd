@@ -6,10 +6,10 @@ const ICE_WIZARD = preload("res://assets/Player Sprites/ice_wizard.png")
 const EARTH_WIZARD = preload("res://assets/Player Sprites/earth_wizard.png")
 const FIRE_WIZARD = preload("res://assets/Player Sprites/fire_wizard.png")
 
-export var base_speed = Vector2(400.0, 900.0)
-export var wall_jump_speed = Vector2(1200, 800)
+export var base_speed = Vector2(550.0, 900.0)
+export var wall_jump_speed = Vector2(1600, 800)
 
-const DASH_SPEED = Vector2(1200, 1200)
+const DASH_SPEED = Vector2(1400, 1400)
 const DASH_TIME = 0.20
 
 signal ice_spell(dir)
@@ -31,6 +31,7 @@ var in_wind_column = false
 var in_water = false
 var blasting = false
 
+
 onready var state_machine = $StateMachine # avoid using when possible, manual state changes can be bad
 onready var cast_line = $CastLine
 onready var left_rays = $"WallColliders/LeftColliders"
@@ -38,6 +39,11 @@ onready var right_rays = $"WallColliders/RightColliders"
 onready var spell_cooldown = $SpellCooldown
 onready var aoe_cast_time = $AOECastTime
 onready var oof_ouch_timer = $OofOuchTimer
+
+
+func initialize_sprites():
+	animation_player = $Ice/AnimationPlayer
+	sprite = $Ice/Sprite
 
 
 func check_raycasts(wall_raycasts):
@@ -179,15 +185,27 @@ func change_spell(spell):
 	if spell == "ice_spell":
 		current_spell = "ice_spell"
 		cast_line.default_color = Color(0.4, 0.5, 1)
-		sprite.texture = ICE_WIZARD
+		sprite = $Ice/Sprite
+		animation_player = $Ice/AnimationPlayer
+		$Nature.visible = false
+		$Ice.visible = true
+		$Fire.visible = false
 	elif spell == "earth_spell":
 		current_spell = "earth_spell"
 		cast_line.default_color = Color(0.1, 0.7, 0.3)
-		sprite.texture = EARTH_WIZARD
+		sprite = $Nature/Sprite
+		animation_player = $Nature/AnimationPlayer
+		$Nature.visible = true
+		$Ice.visible = false
+		$Fire.visible = false
 	elif spell == "fire_spell":
 		current_spell = "fire_spell"
 		cast_line.default_color = Color(1, 0.3, 0.3)
-		sprite.texture = FIRE_WIZARD
+		sprite = $Fire/Sprite
+		animation_player = $Fire/AnimationPlayer
+		$Nature.visible = false
+		$Ice.visible = false
+		$Fire.visible = true
 
 
 func cast_spell():

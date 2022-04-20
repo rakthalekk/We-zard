@@ -17,9 +17,9 @@ func _ready():
 func _on_Crystal_body_entered(body):
 	if body is Player:
 		body.change_spell(spell)
-	$Sprite.visible = false
-	call_deferred("disable_collider", true)
-	$Timer.start()
+		$Sprite.visible = false
+		call_deferred("disable_collider", true)
+		$Timer.start()
 
 
 func _on_Timer_timeout():

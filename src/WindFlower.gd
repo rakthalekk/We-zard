@@ -21,4 +21,8 @@ func sprout():
 	c.global_position = global_position
 	c.rotation = rotation
 	c.direction = Vector2(0, -1).rotated(rotation)
+	call_deferred("add_to_parent", c)
+
+
+func add_to_parent(c):
 	get_parent().add_child(c)

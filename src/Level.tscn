@@ -29,10 +29,3 @@ script = ExtResource( 7 )
 [node name="Player" parent="." instance=ExtResource( 5 )]
 
 [node name="Water" parent="." instance=ExtResource( 6 )]
-
-[connection signal="earth_spell" from="Player" to="." method="_on_Player_earth_spell"]
-[connection signal="earth_spell_aoe" from="Player" to="." method="_on_Player_earth_spell_aoe"]
-[connection signal="fire_spell" from="Player" to="." method="_on_Player_fire_spell"]
-[connection signal="fire_spell_aoe" from="Player" to="." method="_on_Player_fire_spell_aoe"]
-[connection signal="ice_spell" from="Player" to="." method="_on_Player_ice_spell"]
-[connection signal="ice_spell_aoe" from="Player" to="." method="_on_Player_ice_spell_aoe"]

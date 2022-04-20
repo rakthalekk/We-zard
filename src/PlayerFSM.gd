@@ -1,6 +1,7 @@
 extends "res://src/StateMachine.gd"
 
 const DASH_TIME = 0.20
+const IDLE_THRESHOLD = 10
 
 var casting = false
 
@@ -72,7 +73,7 @@ func _get_transition(delta):
 					return states.jump
 				elif parent._velocity.y > 0:
 					return states.fall
-			elif parent._velocity.x != 0:
+			elif abs(parent._velocity.x) >= IDLE_THRESHOLD:
 				return states.run
 		states.run:
 			if !parent.is_on_floor():
@@ -80,7 +81,7 @@ func _get_transition(delta):
 					return states.jump
 				elif parent._velocity.y > 0:
 					return states.fall
-			elif parent._velocity.x == 0:
+			elif abs(parent._velocity.x) <= IDLE_THRESHOLD:
 				return states.idle
 		states.jump:
 			if parent.is_on_floor():
@@ -128,9 +129,15 @@ func _get_transition(delta):
 func _enter_state(new_state, old_state):
 	match new_state:
 		states.idle:
-			parent.animation_player.play('idle')
+			parent.animation_player.play("idle")
+		states.run:
+			parent.animation_player.play("running")
+		states.jump:
+			parent.animation_player.play("jump")
+		states.fall:
+			parent.animation_player.play("fall")
 		states.cast:
-			parent.animation_player.play("spell_cast")
+			parent.animation_player.play("aoe_cast")
 		states.crouch:
 			parent.animation_player.play("crouch")
 

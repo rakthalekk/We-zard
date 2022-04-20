@@ -1,7 +1,7 @@
 class_name Actor
 extends KinematicBody2D
 
-export var minimum_bounce_velocity = Vector2(1200, 1200)
+export var minimum_bounce_velocity = Vector2(1500, 1500)
 export var maximum_bounce_velocity = Vector2(3000, 3000)
 export var minimum_flower_bounce_velocity = 1800
 export (float, 0, 1.0) var ground_friction = 0.5
@@ -16,9 +16,17 @@ var friction = ground_friction
 var bounce_velocity = Vector2(0, 0)
 var landing_frame = false
 
+var animation_player
+var sprite
+
 onready var gravity = ProjectSettings.get("physics/2d/default_gravity")
-onready var animation_player = $AnimationPlayer
-onready var sprite = $Sprite
+
+func _ready():
+	initialize_sprites()
+
+func initialize_sprites():
+	animation_player = $AnimationPlayer
+	sprite = $Sprite
 
 
 func apply_gravity(delta, factor = 1):
