@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://src/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://src/Water.tscn" type="PackedScene" id=2]
@@ -10,6 +10,7 @@
 [ext_resource path="res://src/IceCrystal.tscn" type="PackedScene" id=8]
 [ext_resource path="res://src/Main.gd" type="Script" id=9]
 [ext_resource path="res://src/EarthCrystal.tscn" type="PackedScene" id=10]
+[ext_resource path="res://src/Tome.tscn" type="PackedScene" id=11]
 
 [node name="Level2" type="Node2D"]
 script = ExtResource( 9 )
@@ -42,6 +43,9 @@ position = Vector2( 209, 1182 )
 position = Vector2( 1152, 1242 )
 
 [node name="Flowers" type="Node2D" parent="."]
+
+[node name="Tome" parent="." instance=ExtResource( 11 )]
+position = Vector2( 1526, 2236 )
 
 [node name="Water" parent="." instance=ExtResource( 2 )]
 position = Vector2( -673, -162 )

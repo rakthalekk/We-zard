@@ -58,6 +58,6 @@ rotation = 1.5708
 position = Vector2( 2196, 814 )
 
 [node name="Player" parent="." instance=ExtResource( 4 )]
-position = Vector2( 1235, 758 )
+position = Vector2( 371, 3282 )
 
 [node name="Water" parent="." instance=ExtResource( 2 )]
