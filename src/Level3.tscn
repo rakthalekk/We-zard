@@ -1,0 +1,39 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://src/Main.gd" type="Script" id=1]
+[ext_resource path="res://src/Water.tscn" type="PackedScene" id=2]
+[ext_resource path="res://src/Icy_Foreground.tscn" type="PackedScene" id=3]
+[ext_resource path="res://src/Player.tscn" type="PackedScene" id=4]
+[ext_resource path="res://src/Spikes.tscn" type="PackedScene" id=5]
+[ext_resource path="res://src/Tome.tscn" type="PackedScene" id=6]
+[ext_resource path="res://src/Mushrooms.tscn" type="PackedScene" id=7]
+[ext_resource path="res://src/Foreground.tscn" type="PackedScene" id=8]
+
+[node name="Level" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="Foreground" parent="." instance=ExtResource( 8 )]
+
+[node name="Icy_Foreground" parent="." instance=ExtResource( 3 )]
+
+[node name="Mushrooms" parent="." instance=ExtResource( 7 )]
+
+[node name="Spikes" parent="." instance=ExtResource( 5 )]
+
+[node name="Crystals" type="Node2D" parent="."]
+
+[node name="Flowers" type="Node2D" parent="."]
+
+[node name="Tome" parent="." instance=ExtResource( 6 )]
+position = Vector2( -235, -328 )
+
+[node name="Player" parent="." instance=ExtResource( 4 )]
+
+[node name="Water" parent="." instance=ExtResource( 2 )]
+
+[connection signal="earth_spell" from="Player" to="." method="_on_Player_earth_spell"]
+[connection signal="earth_spell_aoe" from="Player" to="." method="_on_Player_earth_spell_aoe"]
+[connection signal="fire_spell" from="Player" to="." method="_on_Player_fire_spell"]
+[connection signal="fire_spell_aoe" from="Player" to="." method="_on_Player_fire_spell_aoe"]
+[connection signal="ice_spell" from="Player" to="." method="_on_Player_ice_spell"]
+[connection signal="ice_spell_aoe" from="Player" to="." method="_on_Player_ice_spell_aoe"]

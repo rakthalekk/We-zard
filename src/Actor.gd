@@ -66,7 +66,7 @@ func check_collisions():
 			if !col:
 				return
 			if col.collider.is_in_group("KILL") && name == "Player":
-				get_tree().change_scene("res://src/Level.tscn")
+				Global.set_current_level(Global.current_level)
 			if col.collider.is_in_group("icy"):
 				friction = 0
 			elif is_on_floor():

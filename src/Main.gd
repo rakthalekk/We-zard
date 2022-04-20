@@ -22,6 +22,9 @@ onready var water = $Water
 onready var player = $Player
 
 func _ready(): #set camera position
+	
+	Global.current_level = int(name[name.length() - 1])
+	
 	player.connect("ice_spell", self, "_on_Player_ice_spell")
 	player.connect("ice_spell_aoe", self, "_on_Player_ice_spell_aoe")
 	player.connect("earth_spell", self, "_on_Player_earth_spell")
@@ -99,47 +102,51 @@ func _on_Player_earth_spell_aoe():
 	add_child(spell)
 
 
-func _on_mushroomify(pos):
+func _on_mushroomify(pos, direction):
 	if foreground.get_cellv(foreground.world_to_map(pos)) >= 0:
-		_place_shroom(pos)
+		_place_shroom(pos, direction)
 	elif foreground.get_cellv(foreground.world_to_map(pos + Vector2(-1, 0))) >= 0:
-		_place_shroom(pos + Vector2(-1, 0))
+		_place_shroom(pos + Vector2(-1, 0), direction)
 	elif foreground.get_cellv(foreground.world_to_map(pos + Vector2(-1, -1))) >= 0:
-		_place_shroom(pos + Vector2(-1, -1))
+		_place_shroom(pos + Vector2(-1, -1), direction)
 	if icy_foreground.get_cellv(icy_foreground.world_to_map(pos)) >= 0:
-		_place_shroom(pos)
+		_place_shroom(pos, direction)
 	elif icy_foreground.get_cellv(icy_foreground.world_to_map(pos + Vector2(-1, 0))) >= 0:
-		_place_shroom(pos + Vector2(-1, 0))
+		_place_shroom(pos + Vector2(-1, 0), direction)
 	elif icy_foreground.get_cellv(icy_foreground.world_to_map(pos + Vector2(-1, -1))) >= 0:
-		_place_shroom(pos + Vector2(-1, -1))
+		_place_shroom(pos + Vector2(-1, -1), direction)
 
 
-func _place_shroom(pos):
+func _place_shroom(pos, direction):
 	var update = false
 	
 	# Downwards mushrooms
-	if (foreground.get_cellv(foreground.world_to_map(pos + Vector2(0, -64))) == -1 &&
-			icy_foreground.get_cellv(icy_foreground.world_to_map(pos + Vector2(0, -64))) == -1):
-		mushrooms.set_cellv(mushrooms.world_to_map(pos + Vector2(0, -64)), 0)
-		update = true
+	if direction == "down":
+		if (foreground.get_cellv(foreground.world_to_map(pos + Vector2(0, -64))) == -1 &&
+				icy_foreground.get_cellv(icy_foreground.world_to_map(pos + Vector2(0, -64))) == -1):
+			mushrooms.set_cellv(mushrooms.world_to_map(pos + Vector2(0, -64)), 0)
+			update = true
 	
 	# Left facing mushrooms
-	if (foreground.get_cellv(foreground.world_to_map(pos + Vector2(-64, 0))) == -1 &&
-			icy_foreground.get_cellv(icy_foreground.world_to_map(pos + Vector2(-64, 0))) == -1):
-		mushrooms.set_cellv(mushrooms.world_to_map(pos + Vector2(-64, 0)), 1)
-		update = true
+	elif direction == "right":
+		if (foreground.get_cellv(foreground.world_to_map(pos + Vector2(-64, 0))) == -1 &&
+				icy_foreground.get_cellv(icy_foreground.world_to_map(pos + Vector2(-64, 0))) == -1):
+			mushrooms.set_cellv(mushrooms.world_to_map(pos + Vector2(-64, 0)), 1)
+			update = true
 	
 	# Right facing mushrooms
-	if (foreground.get_cellv(foreground.world_to_map(pos + Vector2(64, 0))) == -1 &&
-			icy_foreground.get_cellv(icy_foreground.world_to_map(pos + Vector2(64, 0))) == -1):
-		mushrooms.set_cellv(mushrooms.world_to_map(pos + Vector2(64, 0)), 2)
-		update = true
+	elif direction == "left":
+		if (foreground.get_cellv(foreground.world_to_map(pos + Vector2(64, 0))) == -1 &&
+				icy_foreground.get_cellv(icy_foreground.world_to_map(pos + Vector2(64, 0))) == -1):
+			mushrooms.set_cellv(mushrooms.world_to_map(pos + Vector2(64, 0)), 2)
+			update = true
 	
 	# Upwards mushrooms
-	if (foreground.get_cellv(foreground.world_to_map(pos + Vector2(0, 64))) == -1 &&
-			icy_foreground.get_cellv(icy_foreground.world_to_map(pos + Vector2(0, 64))) == -1):
-		mushrooms.set_cellv(mushrooms.world_to_map(pos + Vector2(0, 64)), 3)
-		update = true
+	else:
+		if (foreground.get_cellv(foreground.world_to_map(pos + Vector2(0, 64))) == -1 &&
+				icy_foreground.get_cellv(icy_foreground.world_to_map(pos + Vector2(0, 64))) == -1):
+			mushrooms.set_cellv(mushrooms.world_to_map(pos + Vector2(0, 64)), 3)
+			update = true
 	
 	if update:
 		mushrooms.update_bitmask_region()

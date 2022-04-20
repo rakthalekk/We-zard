@@ -30,4 +30,5 @@ func _on_BlastRadius_body_entered(body):
 		if body is Player:
 			body.blasting = true
 			body.oof_ouch_timer.start()
+			body.state_machine.set_state(body.state_machine.states.jump)
 		body._velocity = dir * 1800

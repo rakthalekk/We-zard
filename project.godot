@@ -51,8 +51,12 @@ _global_script_class_icons={
 [application]
 
 config/name="We-zard"
-run/main_scene="res://src/Main.tscn"
+run/main_scene="res://src/Level1.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+Global="*res://src/Global.gd"
 
 [display]
 
