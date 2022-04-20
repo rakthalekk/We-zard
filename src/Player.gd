@@ -6,6 +6,7 @@ const ICE_WIZARD = preload("res://assets/Player Sprites/ice_wizard.png")
 const EARTH_WIZARD = preload("res://assets/Player Sprites/earth_wizard.png")
 const FIRE_WIZARD = preload("res://assets/Player Sprites/fire_wizard.png")
 
+export(Vector2) var default_camera_zoom = Vector2(1.25, 1.25)
 export var base_speed = Vector2(550.0, 900.0)
 export var wall_jump_speed = Vector2(1600, 800)
 
@@ -244,3 +245,4 @@ func _on_WaterCollider_body_exited(body):
 
 func _on_OofOuchTimer_timeout():
 	blasting = false
+

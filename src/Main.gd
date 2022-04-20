@@ -12,6 +12,7 @@ export var LIMIT_LEFT = 0
 export var LIMIT_TOP = 0
 export var LIMIT_RIGHT = 3660
 export var LIMIT_BOTTOM = 1536
+export(Vector2) var camera_zoom_factor = Vector2(1.25, 1.25)
 
 var fire_aoe_instance = null
 
@@ -31,6 +32,16 @@ func _ready(): #set camera position
 	player.connect("earth_spell_aoe", self, "_on_Player_earth_spell_aoe")
 	player.connect("fire_spell", self, "_on_Player_fire_spell")
 	player.connect("fire_spell_aoe", self, "_on_Player_fire_spell_aoe")
+	
+	set_camera_bounds()
+	
+	for i in range(-64, LIMIT_RIGHT / 64 + 1):
+		for j in range(-64, LIMIT_BOTTOM / 64 + 1):
+			if foreground.get_cellv(Vector2(i, j)) == 0:
+				icy_foreground.set_cellv(Vector2(i, j), 1)
+
+
+func set_camera_bounds():
 	for child in get_children():
 		if child is Player:
 			var camera = child.get_node("Camera")
@@ -38,11 +49,6 @@ func _ready(): #set camera position
 			camera.limit_top = LIMIT_TOP
 			camera.limit_right = LIMIT_RIGHT
 			camera.limit_bottom = LIMIT_BOTTOM
-	
-	for i in range(-64, LIMIT_RIGHT / 64 + 1):
-		for j in range(-64, LIMIT_BOTTOM / 64 + 1):
-			if foreground.get_cellv(Vector2(i, j)) == 0:
-				icy_foreground.set_cellv(Vector2(i, j), 1)
 
 
 func _on_Player_ice_spell(dir):

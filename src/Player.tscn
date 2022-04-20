@@ -421,6 +421,12 @@ shape = SubResource( 5 )
 wait_time = 0.05
 one_shot = true
 
+[node name="CameraTween" type="Tween" parent="."]
+
+[node name="StartZoomTimer" type="Timer" parent="."]
+wait_time = 2.0
+autostart = true
+
 [connection signal="timeout" from="AOECastTime" to="." method="_on_AOECastTime_timeout"]
 [connection signal="body_entered" from="ShroomZone" to="." method="_on_ShroomZone_body_entered"]
 [connection signal="body_entered" from="WaterCollider" to="." method="_on_WaterCollider_body_entered"]
